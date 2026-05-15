@@ -152,7 +152,7 @@
   </div>
 
   <div class="toggle-container">
-    <button class="toggle-btn" id="metaToggle" onclick="toggleCampaigns('meta')">Show All Campaigns</button>
+    <button class="toggle-btn" id="metaToggle" onclick="toggleCampaigns('meta')">Show All Ad Sets</button>
     <span id="metaStatus" style="font-size: 11px; color: #666;">Showing Active Only</span>
   </div>
 
@@ -337,7 +337,7 @@
   </div>
 
   <div class="toggle-container">
-    <button class="toggle-btn" id="googleToggle" onclick="toggleCampaigns('google')">Show All Campaigns</button>
+    <button class="toggle-btn" id="googleToggle" onclick="toggleCampaigns('google')">Show All Ad Groups</button>
     <span id="googleStatus" style="font-size: 11px; color: #666;">Showing Active Only</span>
   </div>
 
@@ -835,18 +835,6 @@ const campaignData = {
       <td class="num">$900</td>
       <td class="num"><span class="roas-low">3.9x</span></td>
     </tr>
-<tr class="row-paused">
-      <td><a href="https://adsmanager.facebook.com/adsmanager/manage/adsets?act=850448857515247&filter_set=SEARCH_BY_CAMPAIGN_ID-STRING%1EEQUAL%1E%22120240630527350031%22&selected_adset_ids=120240630527350031" target="_blank" rel="noopener" title="Open in Meta Ads Manager">Broad_Forms_&_LP_WeFundIt_Caps ↗</a></td>
-      <td><span class="badge-paused">Paused</span></td>
-      <td class="num">$30/day</td>
-      <td class="num">—</td>
-      <td class="num">0.5</td>
-      <td class="num">—</td>
-      <td class="num"><span class="score-mid">54.0</span></td>
-      <td class="num">$1.3K</td>
-      <td class="num">$663</td>
-      <td class="num"><span class="dash">—</span></td>
-    </tr>
 <tr class="row-active">
       <td><a href="https://adsmanager.facebook.com/adsmanager/manage/adsets?act=850448857515247&filter_set=SEARCH_BY_CAMPAIGN_ID-STRING%1EEQUAL%1E%22120243838187840031%22&selected_adset_ids=120243838187840031" target="_blank" rel="noopener" title="Open in Meta Ads Manager">THMC_ScottAd_Form ↗</a></td>
       <td><span class="badge-active">Active</span></td>
@@ -908,7 +896,7 @@ const campaignData = {
       <td class="num"><span class="roas-low">—</span></td>
     </tr>`,
     activeTotals: { spent: 5759.910000000001, apps: 56.958, ev: 142250.27000000002, roas: 24.696613315138606, budget: 587, avgScore: 58.93821791495488 },
-    allTotals: { spent: 7294.3200000000015, apps: 62.125, ev: 176496.59, roas: 24.19644188903146, budget: 807, avgScore: 58.26714446680081 }
+    allTotals: { spent: 7294.3200000000015, apps: 61.625, ev: 175833.76, roas: 24.105572555083953, budget: 777, avgScore: 58.30176632860041 }
   },
   google: {
     active: `<tr class="row-active">
@@ -1068,18 +1056,6 @@ const campaignData = {
       <td class="num"><span class="roas-low">1.6x</span></td>
     </tr>
 <tr class="row-active">
-      <td>THMC_Google_Remarketing_AllUsers</td>
-      <td><span class="badge-active">Active</span></td>
-      
-      <td class="num">—</td>
-      <td class="num">1</td>
-      <td class="num">—</td>
-      <td class="num"><span class="score-mid">60.2</span></td>
-      <td class="num">$2.9K</td>
-      <td class="num">$3.7K</td>
-      <td class="num"><span class="dash">—</span></td>
-    </tr>
-<tr class="row-active">
       <td>THMC_Google_Illinois_Brand_Search</td>
       <td><span class="badge-active">Active</span></td>
       
@@ -1104,11 +1080,11 @@ const campaignData = {
       <td class="num"><span class="roas-low">0.7x</span></td>
     </tr>`,
     activeTotals: { spent: 12288.839999999998, apps: 43.875, ev: 93045.62, roas: 7.571554353380792, budget: 0, avgScore: 57.131982564102564 },
-    allTotals: { spent: 12288.839999999998, apps: 43.875, ev: 93045.62, roas: 7.571554353380792, budget: 0, avgScore: 57.131982564102564 }
+    allTotals: { spent: 12288.839999999998, apps: 42.625, ev: 89377.37, roas: 7.2730518096093695, budget: 0, avgScore: 57.04201137829912 }
   },
   grand: {
     activeTotals: { spent: 18048.75, apps: 100.833, ev: 235295.89, roas: 13.036686197105064, closed: 0 },
-    allTotals: { spent: 19583.16, apps: 106, ev: 269542.20999999996, roas: 13.763979357774739, closed: 0 }
+    allTotals: { spent: 19583.16, apps: 104.25, ev: 265211.13, roas: 13.542815868327686, closed: 0 }
   }
 };
 
@@ -1147,7 +1123,7 @@ function toggleCampaigns(channel) {
   if (isShowingAll) {
     // Switch to Active Only
     tableBody.innerHTML = campaignData[channel].active;
-    toggleBtn.textContent = 'Show All Campaigns';
+    toggleBtn.textContent = channel === 'meta' ? 'Show All Ad Sets' : 'Show All Ad Groups';
     status.textContent = 'Showing Active Only';
     showingAll[channel] = false;
     updateKPIs(channel, 'active');
@@ -1155,7 +1131,7 @@ function toggleCampaigns(channel) {
     // Switch to All Campaigns
     tableBody.innerHTML = campaignData[channel].all;
     toggleBtn.textContent = 'Show Active Only';
-    status.textContent = 'Showing All Campaigns';
+    status.textContent = channel === 'meta' ? 'Showing All Ad Sets' : 'Showing All Ad Groups';
     showingAll[channel] = true;
     updateKPIs(channel, 'all');
   }
