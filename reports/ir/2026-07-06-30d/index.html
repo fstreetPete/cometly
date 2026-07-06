@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F Street IR — Ad Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;500;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+ :root{
+ --ink:#0a0a0a; --ink-2:#0e0e0e; --panel:#141414; --panel-2:#1a1a1a;
+ --signal:#c7f53d; --white:#fff; --bone:#ECECEC; --steel:#C9C9C2; --mid:#C7C7C7;
+ --warn:#ff6b35; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.16);
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{background:var(--ink);color:var(--bone);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding:48px 40px 80px}
+ .grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
+ background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+ background-size:80px 80px;mix-blend-mode:overlay}
+ .container{max-width:1400px;margin:0 auto;position:relative;z-index:2}
+ .label{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal)}
+ .label::before{content:"// ";color:var(--mid);margin-right:2px}
+ .display{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.035em;line-height:.92;color:var(--white)}
+
+ header{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:36px}
+ h1{font-size:clamp(40px,5vw,68px);margin:14px 0 18px}
+ h1 .light{font-weight:300;color:var(--bone)}
+ h1 .signal{color:var(--signal)}
+ .meta-strip{font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.06em;color:var(--bone);text-transform:uppercase;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+ .meta-strip .dot{color:var(--signal)}
+ .meta-strip .sep{color:var(--mid)}
+
+ .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;border:1px solid var(--line);margin-bottom:40px}
+ .kpi{padding:26px 26px 24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+ .kpi-index{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--steel);margin-bottom:18px}
+ .kpi-value{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.03em;font-size:38px;color:var(--white);line-height:1}
+ .kpi-label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone);margin-top:12px}
+ .kpi-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--signal);margin-top:6px}
+
+ section{margin-bottom:44px}
+ .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:20px}
+ .sec-head h2{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.03em;font-size:26px;color:var(--white)}
+
+ .pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+ .pair{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:var(--panel)}
+ .pair-metric{padding:18px 20px}
+ .pair-cost{padding:18px 20px;border-left:1px solid var(--line);background:var(--ink-2)}
+ .pair-cost.empty{background:transparent}
+ .pair-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:10px;min-height:26px}
+ .pair-value{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:28px;color:var(--white);line-height:1}
+ .pair-value.cost{color:var(--signal)}
+
+ .table-wrap{border:1px solid var(--line);overflow-x:auto}
+ table{border-collapse:collapse;width:100%;min-width:900px}
+ th,td{padding:13px 16px;text-align:right;font-size:13.5px;white-space:nowrap;border-bottom:1px solid var(--line)}
+ th{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--bone);background:var(--panel);position:sticky;top:0}
+ th.cost,td.cost{color:var(--signal)}
+ td{font-family:'JetBrains Mono',monospace;color:var(--bone)}
+ .sticky{position:sticky;left:0;text-align:left;background:var(--panel);z-index:1}
+ td.name{color:var(--white);font-family:'Inter',sans-serif;font-weight:500;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+ tfoot td{background:var(--panel-2);color:var(--white);font-weight:700;border-top:1px solid var(--line-2)}
+ tfoot td.cost{color:var(--signal)}
+
+ .analysis{border:1px solid var(--line);background:var(--panel);padding:28px 32px}
+ .analysis ul{list-style:none}
+ .analysis li{position:relative;padding:10px 0 10px 26px;font-size:15px;line-height:1.55;color:var(--bone);border-bottom:1px solid var(--line)}
+ .analysis li:last-child{border-bottom:0}
+ .analysis li::before{content:"→";position:absolute;left:0;color:var(--signal);font-family:'JetBrains Mono',monospace}
+ .analysis strong{color:var(--white);font-weight:600}
+
+ footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--steel);letter-spacing:.04em}
+
+ @media(max-width:1024px){body{padding:36px 24px}.pair-value{font-size:24px}}
+ @media(max-width:600px){.pair{grid-template-columns:1fr}.pair-cost{border-left:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div class="grid-overlay"></div>
+<div class="container">
+
+ <header>
+ <div class="label">Investor relations · PDF campaign</div>
+ <h1 class="display">Ad performance. <span class="light">Built for the</span> <span class="signal">alternative investor.</span></h1>
+ <div class="meta-strip">
+ <span><span class="dot">●</span> Jun 6 – Jul 6, 2026</span>
+ <span class="sep">/</span><span>Linear Paid</span>
+ <span class="sep">/</span><span>LTV window</span>
+ <span class="sep">/</span><span>Meta · Ad Set</span>
+ <span class="sep">/</span><span>26 ad sets</span>
+ </div>
+ </header>
+
+ <div class="kpis">
+ <div class="kpi">
+ <div class="kpi-index">01</div>
+ <div class="kpi-value">$950</div>
+ <div class="kpi-label">Ad Spend</div>
+ <div class="kpi-sub">Total, LTV</div>
+ </div>
+ <div class="kpi">
+ <div class="kpi-index">02</div>
+ <div class="kpi-value">31</div>
+ <div class="kpi-label">Connected</div>
+ <div class="kpi-sub">Contacts reached</div>
+ </div>
+ <div class="kpi">
+ <div class="kpi-index">03</div>
+ <div class="kpi-value">0</div>
+ <div class="kpi-label">Investors</div>
+ 
+ </div>
+ <div class="kpi">
+ <div class="kpi-index">04</div>
+ <div class="kpi-value">0</div>
+ <div class="kpi-label">New Investors</div>
+ 
+ </div>
+ <div class="kpi">
+ <div class="kpi-index">05</div>
+ <div class="kpi-value">$0</div>
+ <div class="kpi-label">Invested</div>
+ <div class="kpi-sub">Investors Value</div>
+ </div></div>
+
+ <section>
+ <div class="sec-head"><div class="label">Metrics · paired with cost</div></div>
+ <div class="pairs">
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Budget</div>
+ <div class="pair-value">$950</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Meeting Booked</div>
+ <div class="pair-value">8</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">F Street Conversion Score</div>
+ <div class="pair-value">609</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Call</div>
+ <div class="pair-value">12</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Connected</div>
+ <div class="pair-value">31</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per Connected</div>
+ <div class="pair-value cost">$31.15</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Investor Deal Created</div>
+ <div class="pair-value">704</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per Investor Deal Created</div>
+ <div class="pair-value cost">$1.35</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Investor Secured</div>
+ <div class="pair-value">0</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per Investor Secured</div>
+ <div class="pair-value cost">—</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Investors Value</div>
+ <div class="pair-value">$0</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Investors ROAS</div>
+ <div class="pair-value">—</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Investors</div>
+ <div class="pair-value">0</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per Investors</div>
+ <div class="pair-value cost">—</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">New Investor</div>
+ <div class="pair-value">0</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per New Investor</div>
+ <div class="pair-value cost">—</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Bad Email Rate</div>
+ <div class="pair-value">0.0%</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Bad Number Rate</div>
+ <div class="pair-value">25.7%</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Amount Spent</div>
+ <div class="pair-value">$12.9K</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div></div>
+ </section>
+
+ <section>
+ <div class="sec-head"><div class="label">By ad set</div></div>
+ <div class="table-wrap">
+ <table>
+ <thead><tr><th class="sticky">Ad Set</th><th class="num">Budget</th><th class="num">Meeting Booked</th><th class="num">F Street Conversion Score</th><th class="num">Call</th><th class="num">Connected</th><th class="num cost">Cost per Connected</th><th class="num">Investor Deal Created</th><th class="num cost">Cost per Investor Deal Created</th><th class="num">Investor Secured</th><th class="num cost">Cost per Investor Secured</th><th class="num">Investors Value</th><th class="num">Investors ROAS</th><th class="num">Investors</th><th class="num cost">Cost per Investors</th><th class="num">New Investor</th><th class="num cost">Cost per New Investor</th><th class="num">Bad Email Rate</th><th class="num">Bad Number Rate</th><th class="num">Amount Spent</th><th class="num cost">Cost per Investor Engagement</th></tr></thead>
+ <tbody><tr><td class="sticky name">FStreet_Meta_PDF_InvestIn_Form_20260428</td><td class="num">$32.00</td><td class="num">—</td><td class="num">11</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">12</td><td class="num cost">$64.53</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">13.6%</td><td class="num">$791</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_Meta_PDF_aiVid_LP_20260428</td><td class="num">$30.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">$899</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_Meta_PDF_Mailbox_Form_20260427</td><td class="num">$43.00</td><td class="num">—</td><td class="num">234</td><td class="num">—</td><td class="num">6</td><td class="num cost">$234</td><td class="num">275</td><td class="num cost">$5.12</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">1.8%</td><td class="num">$1.4K</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_Meta_Germantown2_Static</td><td class="num">$40.00</td><td class="num">1</td><td class="num">17</td><td class="num">3</td><td class="num">—</td><td class="num cost">—</td><td class="num">16</td><td class="num cost">$50.10</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">$787</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_Meta_Germantown2_Brian</td><td class="num">$35.00</td><td class="num">—</td><td class="num">11</td><td class="num">2</td><td class="num">—</td><td class="num cost">—</td><td class="num">11</td><td class="num cost">$66.34</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">18.2%</td><td class="num">$697</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_Meta_Germantown2_Phone</td><td class="num">$30.00</td><td class="num">—</td><td class="num">10</td><td class="num">1</td><td class="num">—</td><td class="num cost">—</td><td class="num">14</td><td class="num cost">$43.58</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">32.1%</td><td class="num">$610</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_Dinner_Generic</td><td class="num">$40.00</td><td class="num">2</td><td class="num">19</td><td class="num">—</td><td class="num">8</td><td class="num cost">$135</td><td class="num">20</td><td class="num cost">$53.98</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">9.5%</td><td class="num">$1.1K</td><td class="num cost">—</td></tr><tr><td class="sticky name">Adv+_Statics</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">BROAD_Meta_Form</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">BROAD_Videos+Statics</td><td class="num">—</td><td class="num">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">F Street_PDF_Mitch Pink Shirt_[2025-7-15]_SMS_Required</td><td class="num">$48.00</td><td class="num">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">BROAD - F_Street_92_Static_1x1_v9</td><td class="num">$34.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">F Street_PDF_Mitch Pink Shirt_[2025-9-10]_SMS_Required - Copy_Videos+Statics</td><td class="num">$87.00</td><td class="num">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">100.0%</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">Adv+_Dynamic_Statics</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_Dinner_Brookfield</td><td class="num">$42.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">Broad_Meta_Form_401k</td><td class="num">$20.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_PDF_Webinar_week1</td><td class="num">$20.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">Broad_LP_Pastels_Statics</td><td class="num">$40.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">Accr.InvestorRIQ_LP_Compounding</td><td class="num">$50.00</td><td class="num">1</td><td class="num">—</td><td class="num">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">FStreet_Meta_MitchVid_20250501</td><td class="num">$25.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">$36.79</td><td class="num cost">—</td></tr><tr><td class="sticky name">PDF Re-Launch_May_2025</td><td class="num">$200</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">BROAD</td><td class="num">—</td><td class="num">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">F Street_PDF_Mitch Pink Shirt_[2025-7-15] - SMS_Verification_Required - PDV Audience</td><td class="num">$50.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">F Street_PDF_Mitch Pink Shirt_[2025-7-15] - SMS_Verification_Required</td><td class="num">$50.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">BROAD - F_Street_92_Lane_Ad1_16x9_Video_v2</td><td class="num">$34.00</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td></tr><tr><td class="sticky name">Totals</td><td class="num">—</td><td class="num">4</td><td class="num">306</td><td class="num">6</td><td class="num">16</td><td class="num cost">$427</td><td class="num">354</td><td class="num cost">$18.74</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">4.4%</td><td class="num">$6.6K</td><td class="num cost">—</td></tr></tbody>
+ <tfoot><tr><td class="sticky name">Total</td><td class="num">$950</td><td class="num">8</td><td class="num">609</td><td class="num">12</td><td class="num">31</td><td class="num cost">$31.15</td><td class="num">704</td><td class="num cost">$1.35</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">25.7%</td><td class="num">$12.9K</td><td class="num cost">—</td></tr></tfoot>
+ </table>
+ </div>
+ </section>
+
+ <section>
+ <div class="sec-head"><div class="label">Analysis</div></div>
+ <div class="analysis"><ul><li><strong>0 new investors</strong> attributed across 26 ad sets this period (last 30 days).</li><li><strong>$0</strong> in total invested capital (Investors Value).</li></ul></div>
+ </section>
+
+ <footer>F Street · Investor Relations · Cometly Linear Paid / LTV · Last 30 Days · Generated Jul 6, 4:08 PM CT</footer>
+
+</div>
+</body>
+</html>
