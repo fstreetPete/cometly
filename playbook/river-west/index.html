@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F Street — River West Equity Playbook</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@300;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:root{
+  --ink:#ffffff; --ink-2:#f8f8f8; --panel:#f0f0f0; --panel-2:#e8e8e8;
+  --signal:#c7f53d; --white:#000000; --bone:#2a2a2a; --steel:#5a5a5a;
+  --mid:#8a8a8a; --warn:#ff6b35;
+  --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.16);
+}
+*{ margin:0; padding:0; box-sizing:border-box;
+   -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+@page{ size:8.5in 11in; margin:0; }
+html,body{ background:#5a5a5a; font-family:'Inter',sans-serif; color:var(--white); }
+body{ padding:26px 0; }
+
+.page{
+  width:8.5in; min-height:11in; padding:.5in .55in;
+  display:flex; flex-direction:column;
+  background:var(--ink); position:relative;
+  margin:0 auto 26px; box-shadow:0 8px 40px rgba(0,0,0,.4);
+  page-break-after:always; break-after:page;
+}
+.page:last-child{ page-break-after:auto; break-after:auto; }
+@media print{
+  html,body{ background:var(--ink); padding:0; }
+  .page{ margin:0; box-shadow:none; }
+  .io input,.dn-field input,.dn-block textarea{ border-color:var(--line-2); }
+}
+.pg-body{ flex:1 1 auto; }
+
+/* header / footer */
+.pg-head{ display:flex; justify-content:space-between; align-items:flex-start;
+  padding-bottom:14px; border-bottom:1px solid var(--line-2); margin-bottom:22px; }
+.brand{ font-family:'Inter Tight'; font-weight:800; font-size:19px; letter-spacing:-.02em; }
+.brand span{ color:var(--signal); }
+.pg-meta{ text-align:right; font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:500;
+  letter-spacing:.1em; color:var(--steel); line-height:1.7; }
+.pg-meta b{ color:var(--white); font-weight:600; }
+.pg-foot{ display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--line-2);
+  padding-top:10px; margin-top:20px; font-family:'JetBrains Mono',monospace; font-size:9px;
+  letter-spacing:.08em; color:var(--mid); }
+.pg-foot .hl-sm{ background:var(--signal); color:#000; padding:1px 6px; font-weight:600; }
+.pg-foot .pgno{ color:var(--steel); font-weight:600; }
+
+/* title */
+.eyebrow{ font-family:'JetBrains Mono',monospace; font-weight:600; font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--steel); margin-bottom:10px; }
+.eyebrow .s{ color:var(--signal); margin-right:3px; }
+.h1{ font-family:'Inter Tight'; font-weight:800; font-size:38px; letter-spacing:-.035em; line-height:.95; }
+.h1.small{ font-size:30px; }
+.h1 .light{ font-weight:300; color:var(--bone); }
+.hl{ background:var(--signal); color:#000; padding:.01em .16em;
+  -webkit-box-decoration-break:clone; box-decoration-break:clone; }
+.lede{ font-size:13.5px; color:var(--bone); line-height:1.5; margin-top:12px; max-width:6.4in; }
+
+/* anchors */
+.anchors{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:24px 0 20px; }
+.anchor{ border:2px solid var(--white); border-left:5px solid var(--signal); padding:16px 20px;
+  cursor:pointer; position:relative; user-select:none; }
+.anchor .k{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em; color:var(--steel); }
+.anchor .big{ font-family:'Inter Tight'; font-weight:800; font-size:24px; letter-spacing:-.03em; line-height:1; margin:9px 0; }
+.anchor .date{ font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600; color:var(--bone); }
+.anchor .hint{ position:absolute; top:15px; right:16px; font-family:'JetBrains Mono',monospace;
+  font-size:8px; letter-spacing:.1em; color:var(--mid); }
+.anchor.done{ background:var(--signal); border-color:var(--signal); }
+.anchor.done .k,.anchor.done .date,.anchor.done .hint{ color:#000; }
+.anchor.done .hint::before{ content:"\2713 "; }
+
+/* key dates / inputs */
+.keydates{ background:var(--ink-2); border:1px solid var(--line-2); padding:16px 18px; margin-bottom:20px; }
+.kd-title{ font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--white); }
+.kd-sub{ font-size:12px; color:var(--steel); margin:4px 0 14px; }
+.io{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.io label{ font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--steel); display:flex; flex-direction:column; gap:6px; }
+.io input{ font-family:'Inter',sans-serif; font-size:14px; padding:9px 11px; border:1px solid var(--line-2);
+  background:var(--ink); color:#000; }
+.io input:focus{ outline:none; border-color:var(--signal); }
+.io-warn{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--warn); margin-top:10px; min-height:13px; }
+
+/* callout */
+.callout{ background:var(--panel); border-left:3px solid var(--signal); padding:13px 16px;
+  display:flex; align-items:center; gap:12px; cursor:pointer; user-select:none; }
+.callout .cbox{ flex:0 0 18px; width:18px; height:18px; border:1.5px solid var(--line-2);
+  display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; line-height:1;
+  color:transparent; }
+.callout.done .cbox{ background:var(--signal); border-color:var(--signal); color:#000; }
+.callout .k{ font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--steel); }
+.callout .b{ font-size:13px; color:var(--bone); }
+.callout .b b{ color:var(--white); }
+.callout.rem{ background:rgba(255,107,53,.08); border-left-color:var(--warn); }
+.callout.rem .k{ color:var(--warn); }
+
+/* progress */
+.progress{ display:flex; align-items:center; gap:12px;
+  font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--steel); }
+.bar{ flex:1; height:8px; background:var(--panel-2); position:relative; overflow:hidden; }
+.bar > i{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--signal); transition:width .25s; }
+.count b{ color:var(--white); }
+
+/* group */
+.group{ margin-bottom:26px; }
+.group:last-child{ margin-bottom:0; }
+.grp-head{ display:flex; align-items:baseline; gap:10px; border-bottom:1px solid var(--line-2);
+  padding-bottom:8px; margin-bottom:2px; }
+.grp-head .k{ font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--white); }
+.grp-head .k .s{ color:var(--signal); margin-right:4px; }
+.grp-head .due{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600;
+  letter-spacing:.06em; color:var(--steel); text-align:right; }
+
+/* item */
+.item{ display:flex; gap:13px; align-items:flex-start; padding:11px 2px; border-bottom:1px solid var(--line);
+  cursor:pointer; user-select:none; }
+.item.sub{ padding-left:32px; }
+.box{ flex:0 0 18px; width:18px; height:18px; border:1.5px solid var(--line-2); margin-top:1px;
+  display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
+  line-height:1; color:transparent; }
+.item .txt{ font-size:13.5px; color:var(--bone); line-height:1.4; flex:1; }
+.item.sub .txt{ font-size:12.5px; }
+.item .txt b{ color:var(--white); font-weight:600; }
+.item.done .box{ background:var(--signal); border-color:var(--signal); color:#000; }
+.item.done .txt{ color:var(--mid); text-decoration:line-through; }
+.item.done .txt b{ color:var(--mid); font-weight:500; }
+.when{ font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.06em; color:var(--steel);
+  border:1px solid var(--line-2); padding:2px 6px; white-space:nowrap; align-self:flex-start; }
+.when.set{ border-color:var(--signal); color:var(--white); }
+
+/* note */
+.note{ padding:6px 2px 6px 32px; font-size:11.5px; color:var(--steel); line-height:1.4; }
+.note::before{ content:"\2014  "; color:var(--mid); }
+.note b{ color:var(--bone); }
+
+/* dynamic row controls */
+.ctl{ display:flex; gap:4px; align-self:flex-start; margin-left:8px; }
+.ctl button{ width:18px; height:18px; border:1px solid var(--line-2); background:var(--ink); color:var(--steel);
+  font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1; cursor:pointer; padding:0;
+  display:flex; align-items:center; justify-content:center; }
+.ctl button:hover{ border-color:var(--signal); color:#000; background:var(--signal); }
+.item.added{ cursor:default; }
+.item.added .box{ cursor:pointer; }
+.note-in{ flex:1; min-width:0; border:none; border-bottom:1px solid var(--line-2); background:transparent;
+  font-family:'Inter',sans-serif; font-size:12.5px; color:#000; padding:3px 2px; }
+.note-in:focus{ outline:none; border-bottom-color:var(--signal); }
+.item.added.done .note-in{ color:var(--mid); text-decoration:line-through; }
+@media print{ .ctl{ display:none; } }
+
+/* deal notes page */
+.dn-grid{ display:grid; grid-template-columns:1fr 1fr; gap:15px 28px; margin-top:8px; }
+.dn-field{ display:flex; flex-direction:column; gap:6px; }
+.dn-field label{ font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--steel); }
+.dn-field input{ font-family:'Inter',sans-serif; font-size:13px; padding:5px 2px; border:none;
+  border-bottom:1px solid var(--line-2); background:transparent; color:#000; }
+.dn-field input:focus{ outline:none; border-bottom-color:var(--signal); }
+.dn-block{ margin-top:20px; }
+.dn-block label{ font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--steel); display:block; margin-bottom:7px; }
+.dn-block textarea{ width:100%; font-family:'Inter',sans-serif; font-size:13px; line-height:1.9;
+  padding:8px 10px; border:1px solid var(--line-2); background:var(--ink-2); color:#000; resize:none; }
+.dn-block textarea:focus{ outline:none; border-color:var(--signal); }
+</style>
+</head>
+<body>
+
+<!-- ══════════ PAGE 1 · DASHBOARD ══════════ -->
+<div class="page">
+  <header class="pg-head">
+    <div class="brand">F&nbsp;STREET<span>.</span></div>
+    <div class="pg-meta"><div>EQUITY DEAL PLAYBOOK · <b>CONFIDENTIAL</b></div><div><b>RIVER WEST · AVONDALE, AZ</b></div></div>
+  </header>
+  <main class="pg-body">
+    <div class="eyebrow"><span class="s">//</span>RIVER WEST COMMERCE CENTER</div>
+    <h1 class="h1">River West <span class="hl">raise playbook.</span></h1>
+    <p class="lede">Run-of-show for the River West equity raise. Launch is Thursday, July 9. Status shown as of Wednesday, July 8. Tap items to check them off.</p>
+
+    <div class="anchors">
+      <div class="anchor" id="anchorLaunch">
+        <span class="hint">TAP WHEN COMPLETE</span>
+        <div class="k">DEAL LAUNCH</div>
+        <div class="big">Launch</div>
+        <div class="date" id="anchorLaunchDate">&mdash;</div>
+      </div>
+      <div class="anchor" id="anchorClose">
+        <span class="hint">TAP WHEN COMPLETE</span>
+        <div class="k">EXPECTED CLOSE</div>
+        <div class="big">Closing sequence</div>
+        <div class="date" id="anchorCloseDate">&mdash;</div>
+      </div>
+    </div>
+
+    <div class="keydates">
+      <div class="kd-title">Key dates &amp; budget</div>
+      <div class="kd-sub">Set for the River West raise. Adjust here if the timeline shifts.</div>
+      <div class="io">
+        <label>Launch date<input type="date" id="launchDate" value="2026-07-09"></label>
+        <label>Expected close<input type="date" id="closeDate" value="2026-08-23"></label>
+        <label>Total budget<input type="text" id="budget" placeholder="$ &mdash;" value="$50,000"></label>
+      </div>
+      <div class="io-warn" id="dayWarn"></div>
+    </div>
+
+    <div class="callout" id="dinner" style="margin-bottom:20px;">
+      <div class="cbox">&#10003;</div>
+      <div><span class="k">Investor dinner</span><div class="b"><b>Investor dinner &mdash; Aug 5.</b> Confirm venue and finalize the invite list.</div></div>
+    </div>
+
+    <div class="progress">
+      <span class="count"><b id="done">0</b> / <b id="total">0</b></span>
+      <span class="bar"><i id="fill"></i></span>
+      <span id="pct">0%</span>
+    </div>
+  </main>
+  <footer class="pg-foot">
+    <div>INVEST AT <span class="hl-sm">FSTREET.COM</span></div>
+    <div>Confidential &amp; proprietary · River West · internal only</div>
+    <div class="pgno">01 / 05</div>
+  </footer>
+</div>
+
+<!-- ══════════ PAGE 2 · COLLATERAL + AUTOMATION ══════════ -->
+<div class="page">
+  <header class="pg-head">
+    <div class="brand">F&nbsp;STREET<span>.</span></div>
+    <div class="pg-meta"><div>EQUITY DEAL PLAYBOOK · <b>CONFIDENTIAL</b></div><div><b>RIVER WEST · AVONDALE, AZ</b></div></div>
+  </header>
+  <main class="pg-body">
+    <div class="group">
+      <div class="grp-head"><div class="k"><span class="s">//</span>1 · DEAL COLLATERAL &amp; EDUCATION</div></div>
+      <div class="item done"><div class="box">&#10003;</div><div class="txt"><b>3-Pager</b> &mdash; send to potential high-$ investors</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Investment Packet</b> &mdash; final</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Deal Classroom</b> &mdash; deal communicated in-depth to marketing / sales team</div></div>
+      <div class="note">Partially covered. Full deal offering and discussion plan still to be completed.</div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Landing / Offering page</b> built</div></div>
+      <div class="note">Created. Still needs updating.</div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">Ensure <b>/offering/</b> is live on the site alongside launch</div></div>
+    </div>
+
+    <div class="group">
+      <div class="grp-head"><div class="k"><span class="s">//</span>2 · AUTOMATION &amp; SYSTEMS</div></div>
+      <div class="item done"><div class="box">&#10003;</div><div class="txt"><b>Workflows</b> &mdash; Deal Creation</div></div>
+      <div class="item done"><div class="box">&#10003;</div><div class="txt"><b>Workflows</b> &mdash; SMS</div></div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">CRM pipeline + attribution &mdash; set up with the new updated forms</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Email Comms</b> &mdash; sending / deliverability</div></div>
+      <div class="note">Created. Needs updating with accurate information.</div>
+      <div class="item done"><div class="box">&#10003;</div><div class="txt"><b>New Investor Dashboard</b> &mdash; ad metrics auto-pass in</div></div>
+    </div>
+  </main>
+  <footer class="pg-foot">
+    <div>INVEST AT <span class="hl-sm">FSTREET.COM</span></div>
+    <div>Confidential &amp; proprietary · River West · internal only</div>
+    <div class="pgno">02 / 05</div>
+  </footer>
+</div>
+
+<!-- ══════════ PAGE 3 · COMMS + BUDGET/PAID MEDIA ══════════ -->
+<div class="page">
+  <header class="pg-head">
+    <div class="brand">F&nbsp;STREET<span>.</span></div>
+    <div class="pg-meta"><div>EQUITY DEAL PLAYBOOK · <b>CONFIDENTIAL</b></div><div><b>RIVER WEST · AVONDALE, AZ</b></div></div>
+  </header>
+  <main class="pg-body">
+    <div class="group">
+      <div class="grp-head"><div class="k"><span class="s">//</span>3 · COMMUNICATION SEQUENCES</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>10-Email Sequence</b></div></div>
+      <div class="note">Created. Needs updating.</div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Deal Launch Email</b></div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Closing Sequence Plan</b></div></div>
+    </div>
+
+    <div class="group">
+      <div class="grp-head"><div class="k"><span class="s">//</span>4 · BUDGET &amp; PAID MEDIA</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Budget Determination</b> &mdash; <span id="budgetOut" style="color:var(--white)">$50,000</span></div></div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">Paid spend ramp-up</div></div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">Misc. budget items</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Ad Campaigns</b></div></div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">Meta</div></div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">AdWords &mdash; multiple ad sets; metrics auto-pass into new investor dashboard</div></div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">SimpliFi (if necessary)</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Ad Creative Assets</b> &mdash; 4 campaigns, video + static, ready to go live</div></div>
+    </div>
+  </main>
+  <footer class="pg-foot">
+    <div>INVEST AT <span class="hl-sm">FSTREET.COM</span></div>
+    <div>Confidential &amp; proprietary · River West · internal only</div>
+    <div class="pgno">03 / 05</div>
+  </footer>
+</div>
+
+<!-- ══════════ PAGE 4 · SUBSCRIPTION + WEBINAR + REMINDER ══════════ -->
+<div class="page">
+  <header class="pg-head">
+    <div class="brand">F&nbsp;STREET<span>.</span></div>
+    <div class="pg-meta"><div>EQUITY DEAL PLAYBOOK · <b>CONFIDENTIAL</b></div><div><b>RIVER WEST · AVONDALE, AZ</b></div></div>
+  </header>
+  <main class="pg-body">
+    <div class="group">
+      <div class="grp-head"><div class="k"><span class="s">//</span>5 · SUBSCRIPTION &amp; FUNDING · AGORA</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Agora</b> set up</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Subscription Docs</b> loaded</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Testing</b> &mdash; full run-through</div></div>
+    </div>
+
+    <div class="group">
+      <div class="grp-head"><div class="k"><span class="s">//</span>6 · LAUNCH WEBINAR &amp; ROUNDTABLE</div><div class="due">JUL 9 · WEBINAR JUL 14</div></div>
+      <div class="item"><div class="box">&#10003;</div><div class="txt"><b>Launch Webinar / Investor Roundtable</b> &mdash; Jul 14, 11:00 AM</div></div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">Webinar registration live</div></div>
+      <div class="item sub"><div class="box">&#10003;</div><div class="txt">Second webinar tentatively held for Aug 4</div></div>
+    </div>
+
+    <div class="callout rem" id="legal" style="margin-top:6px;">
+      <div class="cbox">&#10003;</div>
+      <div><span class="k">Reminder · before anything goes live</span><div class="b"><b>Legal compliance / ad-set review</b> &mdash; copy and creative cleared under general-solicitation rules.</div></div>
+    </div>
+  </main>
+  <footer class="pg-foot">
+    <div>INVEST AT <span class="hl-sm">FSTREET.COM</span></div>
+    <div>Confidential &amp; proprietary · River West · internal only</div>
+    <div class="pgno">04 / 05</div>
+  </footer>
+</div>
+
+<!-- ══════════ PAGE 5 · DEAL NOTES ══════════ -->
+<div class="page">
+  <header class="pg-head">
+    <div class="brand">F&nbsp;STREET<span>.</span></div>
+    <div class="pg-meta"><div>EQUITY DEAL PLAYBOOK · <b>CONFIDENTIAL</b></div><div><b>DEAL NOTES</b></div></div>
+  </header>
+  <main class="pg-body">
+    <div class="eyebrow"><span class="s">//</span>DEAL NOTES</div>
+    <h1 class="h1 small">The deal, in <span class="hl">brief.</span></h1>
+    <p class="lede">High-level reference for the River West raise. Internal only.</p>
+
+    <div class="dn-grid">
+      <div class="dn-field"><label>Deal name</label><input type="text" value="River West Commerce Center"></div>
+      <div class="dn-field"><label>Entity / LLC</label><input type="text" value="F Street River West, LLC (into River West Holdings, LP)"></div>
+      <div class="dn-field"><label>Asset type</label><input type="text" value="Ground-up Class A shallow-bay industrial, 110,950 SF"></div>
+      <div class="dn-field"><label>Location</label><input type="text" value="Avondale, AZ (I-10 Corridor, Phoenix West Valley)"></div>
+      <div class="dn-field"><label>Raise target</label><input type="text" value="$7.2M total"></div>
+      <div class="dn-field"><label>LP equity</label><input type="text" value="$6.5M"></div>
+      <div class="dn-field"><label>Minimum investment</label><input type="text"></div>
+      <div class="dn-field"><label>Preferred return</label><input type="text" value="7%"></div>
+      <div class="dn-field"><label>Promote / waterfall</label><input type="text" value="7% pref, 100% return of capital, then 50/50"></div>
+      <div class="dn-field"><label>Hold period</label><input type="text" value="About 3 years, build to sell"></div>
+      <div class="dn-field"><label>Launch date</label><input type="text" value="Thu, July 9, 2026"></div>
+      <div class="dn-field"><label>Expected close</label><input type="text" value="Aug 23, 2026 (45-day window)"></div>
+      <div class="dn-field"><label>Dinner date</label><input type="text" value="Wed, Aug 5, 2026"></div>
+      <div class="dn-field"><label>Webinar date(s)</label><input type="text" value="Jul 14, 11:00 AM roundtable · Aug 4 tentative"></div>
+    </div>
+
+    <div class="dn-block"><label>Investment thesis / why invest</label><textarea rows="4">Phoenix's West Valley has a shortage of smaller, flexible industrial space while oversized big-box warehouses sit vacant. River West is a ground-up 110,950 SF Class A shallow-bay building on the I-10 corridor, built with Hopewell below recent comparable sale prices to lock in margin at exit. Build to sell over about a 3-year hold. 7% preferred return to LPs, with profit split only after LP capital is returned in full.</textarea></div>
+    <div class="dn-block"><label>Anchor / high-$ investors</label><textarea rows="3"></textarea></div>
+    <div class="dn-block"><label>Open items &amp; notes</label><textarea rows="4"></textarea></div>
+  </main>
+  <footer class="pg-foot">
+    <div>INVEST AT <span class="hl-sm">FSTREET.COM</span></div>
+    <div>Confidential &amp; proprietary · River West · internal only</div>
+    <div class="pgno">05 / 05</div>
+  </footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+(function(){
+  // ---- Firebase config (shared backend for all playbooks) ----
+  var CFG = {
+    apiKey: "AIzaSyCAB5xgSHmJ50_FVwGVII8vLrOlq254VnA",
+    databaseURL: "https://f-street-raise-playbook-default-rtdb.firebaseio.com"
+  };
+  var PATH = "playbooks/river-west";   // change this one line to spin up a new deal
+
+  var ref=null, syncEnabled=false, applyingRemote=false;
+  try{ if(window.firebase){ firebase.initializeApp(CFG); ref=firebase.database().ref(PATH); syncEnabled=true; } }
+  catch(e){ syncEnabled=false; }
+
+  function W(path,val){ if(!syncEnabled||applyingRemote) return; try{ ref.child(path).set(val);}catch(e){} }
+  function Wdel(path){ if(!syncEnabled||applyingRemote) return; try{ ref.child(path).remove();}catch(e){} }
+  function debounce(fn,ms){ var t; return function(){ var a=arguments,c=this; clearTimeout(t); t=setTimeout(function(){ fn.apply(c,a); },ms); }; }
+
+  var doneEl=document.getElementById('done');
+  var totalEl=document.getElementById('total');
+  var fill=document.getElementById('fill');
+  var pct=document.getElementById('pct');
+
+  function refresh(){
+    var all=document.querySelectorAll('.item');
+    var d=document.querySelectorAll('.item.done').length;
+    totalEl.textContent=all.length; doneEl.textContent=d;
+    var p=all.length?Math.round(d/all.length*100):0;
+    fill.style.width=p+'%'; pct.textContent=p+'%';
+  }
+
+  // ---- preset items ----
+  function rowToggle(){
+    this.classList.toggle('done');
+    if(!applyingRemote) W('checks/'+this.dataset.key, this.classList.contains('done'));
+    refresh();
+  }
+
+  function ownerEl(k){
+    return document.querySelector('.item[data-key="'+k+'"]') ||
+           document.querySelector('.item.added[data-noteid="'+k+'"]');
+  }
+  function insertNoteRow(row){
+    var oel=ownerEl(row.dataset.owner); if(!oel) return false;
+    var seq=+row.dataset.seq, r=oel;
+    while(r.nextElementSibling && r.nextElementSibling.classList.contains('added')
+          && r.nextElementSibling.dataset.owner===row.dataset.owner
+          && (+r.nextElementSibling.dataset.seq)<=seq){ r=r.nextElementSibling; }
+    oel.parentNode.insertBefore(row, r.nextElementSibling); return true;
+  }
+  function makeNoteRow(rec){
+    var row=document.createElement('div');
+    row.className='item added'+(rec.done?' done':'');
+    row.dataset.noteid=rec.id; row.dataset.owner=rec.owner; row.dataset.seq=rec.seq;
+    row.style.paddingLeft=(rec.pl||32)+'px';
+    var box=document.createElement('div'); box.className='box'; box.innerHTML='&#10003;';
+    box.addEventListener('click', function(){
+      row.classList.toggle('done'); W('notes/'+rec.id+'/done', row.classList.contains('done')); refresh();
+    });
+    var inp=document.createElement('input'); inp.type='text'; inp.className='note-in';
+    inp.placeholder='Add a note...'; inp.value=rec.text||'';
+    inp.addEventListener('input', debounce(function(){ W('notes/'+rec.id+'/text', inp.value); },400));
+    var ctl=document.createElement('span'); ctl.className='ctl';
+    var del=document.createElement('button'); del.type='button'; del.className='del'; del.innerHTML='&times;'; del.title='Delete line';
+    del.addEventListener('click', function(e){ e.stopPropagation(); removeCascade(rec.id); });
+    ctl.appendChild(del);
+    row.appendChild(box); row.appendChild(inp); row.appendChild(ctl);
+    return row;
+  }
+  function removeCascade(id){
+    var kids=document.querySelectorAll('.item.added[data-owner="'+id+'"]');
+    Array.prototype.forEach.call(kids,function(ch){ removeCascade(ch.dataset.noteid); });
+    var el=document.querySelector('.item.added[data-noteid="'+id+'"]'); if(el) el.remove();
+    Wdel('notes/'+id); refresh();
+  }
+  function addNoteLocal(parent){
+    var ownerKey=parent.dataset.key||parent.dataset.noteid;
+    var pl=parent.classList.contains('added') ? (parseInt(parent.style.paddingLeft||'32',10)+20)
+          : (parent.classList.contains('sub')?52:32);
+    var rec={ id:'n_'+Math.random().toString(36).slice(2,10), owner:ownerKey, pl:pl, text:'', done:false, seq:Date.now() };
+    var row=makeNoteRow(rec); insertNoteRow(row);
+    var inp=row.querySelector('.note-in'); if(inp) inp.focus();
+    W('notes/'+rec.id, {owner:rec.owner, pl:rec.pl, text:'', done:false, seq:rec.seq});
+    refresh();
+  }
+  function addCtl(item){
+    var ctl=document.createElement('span'); ctl.className='ctl';
+    var add=document.createElement('button'); add.type='button'; add.className='add'; add.textContent='+'; add.title='Add note line';
+    add.addEventListener('click', function(e){ e.stopPropagation(); addNoteLocal(item); });
+    ctl.appendChild(add); item.appendChild(ctl);
+  }
+
+  // assign stable keys + wire preset items (only presets exist at load)
+  Array.prototype.slice.call(document.querySelectorAll('.item')).forEach(function(it,i){
+    it.dataset.key='p'+i;
+    it.addEventListener('click', rowToggle);
+    addCtl(it);
+  });
+
+  // ---- anchors + callouts (not counted) ----
+  [['anchorLaunch','anchors'],['anchorClose','anchors'],['dinner','callouts'],['legal','callouts']].forEach(function(pair){
+    var el=document.getElementById(pair[0]); if(!el) return;
+    el.addEventListener('click', function(){
+      el.classList.toggle('done');
+      if(!applyingRemote) W(pair[1]+'/'+pair[0], el.classList.contains('done'));
+    });
+  });
+
+  // ---- dates + budget ----
+  var launch=document.getElementById('launchDate');
+  var close =document.getElementById('closeDate');
+  var budget=document.getElementById('budget');
+  var dayWarn=document.getElementById('dayWarn');
+  var DOW=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  var MON=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  function fmt(d){ return DOW[d.getDay()]+' \u00b7 '+MON[d.getMonth()]+' '+d.getDate(); }
+  function parse(v){ if(!v) return null; var q=v.split('-'); return new Date(+q[0],+q[1]-1,+q[2]); }
+  function addDays(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function refreshDates(){
+    var L=parse(launch.value);
+    document.querySelectorAll('.when[data-off]').forEach(function(el){
+      var off=parseInt(el.getAttribute('data-off'),10);
+      if(L){ el.textContent=fmt(addDays(L,off)); el.classList.add('set'); }
+      else { el.textContent=el.getAttribute('data-label'); el.classList.remove('set'); }
+    });
+    document.getElementById('anchorLaunchDate').textContent=L?fmt(L):'\u2014';
+    var C=parse(close.value);
+    document.getElementById('anchorCloseDate').textContent=C?fmt(C):'\u2014';
+    if(L){ var day=L.getDay(); dayWarn.textContent=(day>=2&&day<=4)?'':'! Launch should fall on Tue / Wed / Thu'; }
+    else { dayWarn.textContent=''; }
+  }
+  launch.addEventListener('change', function(){ refreshDates(); W('fields/launchDate', launch.value); });
+  close.addEventListener('change', function(){ refreshDates(); W('fields/closeDate', close.value); });
+  function fmtMoney(v){ var d=(''+v).replace(/[^0-9]/g,''); return d?'$'+Number(d).toLocaleString('en-US'):''; }
+  var budgetWrite=debounce(function(){ W('fields/budget', budget.value); },400);
+  budget.addEventListener('input', function(){
+    budget.value=fmtMoney(budget.value);
+    document.getElementById('budgetOut').textContent=budget.value||'\u2014';
+    budgetWrite();
+  });
+
+  // ---- deal notes fields ----
+  var dnInputs=document.querySelectorAll('.dn-field input');
+  Array.prototype.forEach.call(dnInputs,function(el,i){
+    el.dataset.fkey='dn'+i;
+    el.addEventListener('input', debounce(function(){ W('fields/'+el.dataset.fkey, el.value); },400));
+  });
+  var dnAreas=document.querySelectorAll('.dn-block textarea');
+  Array.prototype.forEach.call(dnAreas,function(el,i){
+    el.dataset.fkey='dnb'+i;
+    el.addEventListener('input', debounce(function(){ W('fields/'+el.dataset.fkey, el.value); },400));
+  });
+
+  // ---- apply remote state ----
+  function setChecked(el,v){ el.classList.toggle('done', !!v); }
+  function applyField(el,v){ if(v!==undefined && v!==null && el!==document.activeElement) el.value=v; }
+  function reconcileNotes(notes){
+    notes=notes||{}; var ids=Object.keys(notes);
+    Array.prototype.forEach.call(document.querySelectorAll('.item.added'),function(el){
+      if(ids.indexOf(el.dataset.noteid)===-1) el.remove();
+    });
+    ids.sort(function(a,b){ return (notes[a].seq||0)-(notes[b].seq||0); });
+    ids.forEach(function(id){
+      var rec=notes[id]||{}; var el=document.querySelector('.item.added[data-noteid="'+id+'"]');
+      if(!el){ insertNoteRow(makeNoteRow({id:id,owner:rec.owner,pl:rec.pl,text:rec.text||'',done:!!rec.done,seq:rec.seq||0})); }
+      else{
+        setChecked(el, rec.done);
+        var inp=el.querySelector('.note-in');
+        if(inp && inp!==document.activeElement && inp.value!==(rec.text||'')) inp.value=rec.text||'';
+      }
+    });
+  }
+  function applyState(s){
+    applyingRemote=true; s=s||{};
+    var checks=s.checks||{}, anchors=s.anchors||{}, callouts=s.callouts||{}, fields=s.fields||{}, notes=s.notes||{};
+    document.querySelectorAll('.item[data-key]').forEach(function(it){ if(Object.prototype.hasOwnProperty.call(checks,it.dataset.key)) setChecked(it, checks[it.dataset.key]); });
+    ['anchorLaunch','anchorClose'].forEach(function(id){ var el=document.getElementById(id); if(el && Object.prototype.hasOwnProperty.call(anchors,id)) setChecked(el, anchors[id]); });
+    ['dinner','legal'].forEach(function(id){ var el=document.getElementById(id); if(el && Object.prototype.hasOwnProperty.call(callouts,id)) setChecked(el, callouts[id]); });
+    applyField(launch, fields.launchDate);
+    applyField(close, fields.closeDate);
+    if(fields.budget!==undefined && fields.budget!==null && budget!==document.activeElement){
+      budget.value=fields.budget; document.getElementById('budgetOut').textContent=fields.budget||'\u2014';
+    }
+    document.querySelectorAll('[data-fkey]').forEach(function(el){ applyField(el, fields[el.dataset.fkey]); });
+    refreshDates();
+    reconcileNotes(notes);
+    applyingRemote=false; refresh();
+  }
+
+  if(syncEnabled){ ref.on('value', function(snap){ applyState(snap.val()); }); }
+  refresh(); refreshDates();
+})();
+</script>
+</body>
+</html>
