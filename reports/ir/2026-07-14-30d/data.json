@@ -1,0 +1,34 @@
+{
+  "dateRange": "Last 30 Days",
+  "attributionModel": "Linear Paid",
+  "attributionWindow": "LTV",
+  "view": "Meta / Ad Set",
+  "scrapeTime": "2026-07-14T14:31:06.247Z",
+  "adSets": {
+    "headers": {
+      "name": "Name",
+      "delivery": "Delivery",
+      "budget": "Budget",
+      "amount_spent": "Amount Spent",
+      "custom_event_2": "Investor Deal Created",
+      "cost_per_custom_event_2": "Cost per Investor Deal Created",
+      "cost_per_custom_event_4": "Cost per Investor Engagement",
+      "custom_event_5": "Investor Secured",
+      "cost_per_custom_event_5": "Cost per Investor Secured",
+      "custom_event_7": "Connected",
+      "cost_per_custom_event_7": "Cost per Connected",
+      "custom_event_8": "Meeting Booked",
+      "custom_event_20": "F Street Conversion Score",
+      "custom_event_24": "Call",
+      "custom_event_25": "Investors",
+      "cost_per_custom_event_25": "Cost per Investors",
+      "custom_event_25_amount": "Investors Value",
+      "custom_event_25_roas": "Investors ROAS",
+      "custom_event_26": "New Investor",
+      "cost_per_custom_event_26": "Cost per New Investor",
+      "m_bad_email_rate": "Bad Email Rate",
+      "m_bad_number_rate": "Bad Number Rate"
+    },
+    "rows": []
+  }
+}
