@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F Street IR — Ad Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;500;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+ :root{
+ --ink:#0a0a0a; --ink-2:#0e0e0e; --panel:#141414; --panel-2:#1a1a1a;
+ --signal:#c7f53d; --white:#fff; --bone:#ECECEC; --steel:#C9C9C2; --mid:#C7C7C7;
+ --warn:#ff6b35; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.16);
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{background:var(--ink);color:var(--bone);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;padding:48px 40px 80px}
+ .grid-overlay{position:fixed;inset:0;z-index:1;pointer-events:none;
+ background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+ background-size:80px 80px;mix-blend-mode:overlay}
+ .container{max-width:1400px;margin:0 auto;position:relative;z-index:2}
+ .label{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal)}
+ .label::before{content:"// ";color:var(--mid);margin-right:2px}
+ .display{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.035em;line-height:.92;color:var(--white)}
+
+ header{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:36px}
+ h1{font-size:clamp(40px,5vw,68px);margin:14px 0 18px}
+ h1 .light{font-weight:300;color:var(--bone)}
+ h1 .signal{color:var(--signal)}
+ .meta-strip{font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.06em;color:var(--bone);text-transform:uppercase;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+ .meta-strip .dot{color:var(--signal)}
+ .meta-strip .sep{color:var(--mid)}
+
+ .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;border:1px solid var(--line);margin-bottom:40px}
+ .kpi{padding:26px 26px 24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+ .kpi-index{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--steel);margin-bottom:18px}
+ .kpi-value{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.03em;font-size:38px;color:var(--white);line-height:1}
+ .kpi-label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone);margin-top:12px}
+ .kpi-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--signal);margin-top:6px}
+
+ section{margin-bottom:44px}
+ .sec-head{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+ .sec-head h2{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.03em;font-size:26px;color:var(--white)}
+
+ .pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+ .pair{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:var(--panel)}
+ .pair-metric{padding:18px 20px}
+ .pair-cost{padding:18px 20px;border-left:1px solid var(--line);background:var(--ink-2)}
+ .pair-cost.empty{background:transparent}
+ .pair-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--steel);margin-bottom:10px;min-height:26px}
+ .pair-value{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:28px;color:var(--white);line-height:1}
+ .pair-value.cost{color:var(--signal)}
+
+ .table-wrap{border:1px solid var(--line);overflow-x:auto}
+ table{border-collapse:collapse;width:100%;min-width:900px}
+ th,td{padding:13px 16px;text-align:right;font-size:13.5px;white-space:nowrap;border-bottom:1px solid var(--line)}
+ th{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--bone);background:var(--panel);position:sticky;top:0}
+ th.cost,td.cost{color:var(--signal)}
+ td{font-family:'JetBrains Mono',monospace;color:var(--bone)}
+ .sticky{position:sticky;left:0;text-align:left;background:var(--panel);z-index:1}
+ td.name{color:var(--white);font-family:'Inter',sans-serif;font-weight:500;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+ tfoot td{background:var(--panel-2);color:var(--white);font-weight:700;border-top:1px solid var(--line-2)}
+ tfoot td.cost{color:var(--signal)}
+
+ .analysis{border:1px solid var(--line);background:var(--panel);padding:28px 32px}
+ .analysis ul{list-style:none}
+ .analysis li{position:relative;padding:10px 0 10px 26px;font-size:15px;line-height:1.55;color:var(--bone);border-bottom:1px solid var(--line)}
+ .analysis li:last-child{border-bottom:0}
+ .analysis li::before{content:"→";position:absolute;left:0;color:var(--signal);font-family:'JetBrains Mono',monospace}
+ .analysis strong{color:var(--white);font-weight:600}
+
+ .build-stamp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--signal);letter-spacing:.06em;margin-bottom:12px;padding:4px 10px;border:1px solid var(--signal);display:inline-block;border-radius:3px;opacity:.8}
+ footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--steel);letter-spacing:.04em}
+
+ @media(max-width:1024px){body{padding:36px 24px}.pair-value{font-size:24px}}
+ @media(max-width:600px){.pair{grid-template-columns:1fr}.pair-cost{border-left:0;border-top:1px solid var(--line)}}
+ /* delivery toggle */
+ .tgl-group{display:flex;gap:4px;margin-left:auto}
+ .tgl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:transparent;color:var(--steel);border:1px solid var(--line-2);padding:6px 12px;cursor:pointer;transition:all .2s}
+ .tgl:hover{color:var(--bone);border-color:var(--bone)}
+ .tgl.tgl-on{background:var(--signal);color:var(--ink);border-color:var(--signal)}
+ /* delivery status dot */
+ .del-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:8px;vertical-align:middle;flex-shrink:0}
+ .del-active{background:var(--signal)}
+ .del-inactive{background:var(--steel);opacity:.6}
+
+ .calc-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+ .calc-reset{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+ background:transparent;color:var(--steel);border:1px solid var(--line-2);padding:7px 13px;cursor:pointer;transition:all .25s}
+ .calc-reset:hover{background:var(--signal);color:var(--ink);border-color:var(--signal)}
+ .calc{border:1px solid var(--line);background:var(--panel);margin-bottom:10px}
+ .tier-head{display:flex;align-items:center;gap:9px;padding:9px 14px;border-bottom:1px solid var(--line);background:var(--ink-2)}
+ .tier-head .tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--steel)}
+ .tier-head .pip{width:5px;height:5px;background:var(--signal)}
+ .tier-head.out-head{border-top:1px solid var(--line-2)}
+ .tier-head.out-head .pip{background:var(--mid)}
+ .tier{display:grid;width:100%}
+ .tier.inputs{grid-template-columns:repeat(6,1fr);background:var(--panel-2)}
+ .tier.derived{grid-template-columns:repeat(8,1fr);background:var(--ink-2)}
+ .calc .cell{min-width:0;padding:14px;border-right:1px solid var(--line);overflow:hidden}
+ .calc .cell:last-child{border-right:0}
+ .cell-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:.05em;
+ text-transform:uppercase;color:var(--steel);margin-bottom:9px;line-height:1.3;min-height:25px}
+ .tier.inputs .cell-label{color:var(--bone)}
+ .field{display:flex;align-items:center;gap:2px;min-width:0;background:var(--ink);
+ border:1px solid var(--line-2);padding:8px 10px;transition:border-color .2s,background .2s}
+ .field:hover{border-color:var(--steel)}
+ .field:focus-within{border-color:var(--signal);background:#0d0f09}
+ .affix{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px;color:var(--mid);line-height:1;flex:0 0 auto}
+ .calc input{width:100%;min-width:0;background:transparent;border:0;
+ font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(15px,1.3vw,19px);
+ color:var(--white);padding:0;outline:none;-moz-appearance:textfield}
+ .calc input::-webkit-outer-spin-button,.calc input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+ .field:focus-within input{color:var(--signal)}
+ .out{font-family:'Inter Tight',sans-serif;font-weight:800;letter-spacing:-.02em;font-size:clamp(15px,1.3vw,20px);
+ color:var(--white);line-height:1;padding-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .out.money{color:var(--bone)}
+ .out.key{color:var(--signal)}
+ .calc .cell.hero{background:rgba(199,245,61,.05);border-left:2px solid var(--signal)}
+ .calc .cell.hero .cell-label{color:var(--signal)}
+ .calc .cell.hero .out{font-size:clamp(22px,1.9vw,30px);color:var(--signal);letter-spacing:-.03em}
+ .calc-note{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--steel);letter-spacing:.03em;line-height:1.7;margin-bottom:28px}
+ .calc-note .k{color:var(--signal)}
+ @media(max-width:1100px){
+ .tier.inputs{grid-template-columns:repeat(3,1fr)}
+ .tier.derived{grid-template-columns:repeat(4,1fr)}
+ .calc .cell{border-bottom:1px solid var(--line)}
+ }
+ @media(max-width:640px){.tier.inputs,.tier.derived{grid-template-columns:repeat(2,1fr)}}
+
+</style>
+</head>
+<body>
+<div class="grid-overlay"></div>
+<div class="container">
+
+ <header>
+ <div class="build-stamp">Build: Jul 15, 2026, 9:31:19 AM CDT</div>
+ <div class="label">Investor relations · PDF campaign</div>
+ <h1 class="display">Ad performance. <span class="light">Built for the</span> <span class="signal">alternative investor.</span></h1>
+ <div class="meta-strip">
+ <span><span class="dot">●</span> Jun 15 – Jul 15, 2026</span>
+ <span class="sep">/</span><span>Linear Paid</span>
+ <span class="sep">/</span><span>LTV window</span>
+ <span class="sep">/</span><span>Meta · Ad Set</span>
+ <span class="sep">/</span><span>7 active · 36 inactive</span>
+ </div>
+ </header>
+
+ 
+ <div class="calc-head">
+ <div class="label">Projection calculator</div>
+ <button class="calc-reset" id="calcReset">Reset defaults</button>
+ </div>
+
+ <div class="calc">
+ <div class="tier-head"><span class="pip"></span><span class="tag">Assumptions — editable</span></div>
+ <div class="tier inputs">
+ <div class="cell">
+ <div class="cell-label">Leads / day</div>
+ <div class="field"><input type="number" id="leads" step="0.1" value="14"></div>
+ </div>
+ <div class="cell">
+ <div class="cell-label">Cost per accredited</div>
+ <div class="field"><span class="affix">$</span><input type="number" id="cpa" step="1" value="35"></div>
+ </div>
+ <div class="cell">
+ <div class="cell-label">Setter connection rate</div>
+ <div class="field"><input type="number" id="setter" step="1" value="30"><span class="affix">%</span></div>
+ </div>
+ <div class="cell">
+ <div class="cell-label">Mitch connection rate</div>
+ <div class="field"><input type="number" id="mitch" step="1" value="50"><span class="affix">%</span></div>
+ </div>
+ <div class="cell">
+ <div class="cell-label">Conversion rate</div>
+ <div class="field"><input type="number" id="conv" step="1" value="30"><span class="affix">%</span></div>
+ </div>
+ <div class="cell">
+ <div class="cell-label">Avg first-time investor</div>
+ <div class="field"><span class="affix">$</span><input type="number" id="avgInv" step="1000" value="75000"></div>
+ </div>
+ </div>
+
+ <div class="tier-head out-head"><span class="pip"></span><span class="tag">Projected — calculated</span></div>
+ <div class="tier derived">
+ <div class="cell"><div class="cell-label">Monthly leads</div><div class="out" id="oMonthlyLeads">—</div></div>
+ <div class="cell"><div class="cell-label">Setter connections</div><div class="out" id="oSetterConn">—</div></div>
+ <div class="cell"><div class="cell-label">Mitch connections</div><div class="out" id="oMitchConn">—</div></div>
+ <div class="cell hero"><div class="cell-label">Investors / mo</div><div class="out" id="oInvestors">—</div></div>
+ <div class="cell"><div class="cell-label">Daily budget</div><div class="out money" id="oDailyBudget">—</div></div>
+ <div class="cell"><div class="cell-label">Monthly budget</div><div class="out money" id="oMonthlyBudget">—</div></div>
+ <div class="cell"><div class="cell-label">New investor capital</div><div class="out key" id="oNewCapital">—</div></div>
+ <div class="cell"><div class="cell-label">Cost of capital</div><div class="out key" id="oCoC">—</div></div>
+ </div>
+ </div>
+
+ <div class="calc-note">
+ <span class="k">Monthly leads</span> = leads × 30.4 &nbsp;·&nbsp;
+ <span class="k">Investors</span> = monthly leads × setter% × mitch% × conv% &nbsp;·&nbsp;
+ <span class="k">Monthly budget</span> = cost per accredited × monthly leads &nbsp;·&nbsp;
+ <span class="k">New investor capital</span> = investors × avg first-time investor &nbsp;·&nbsp;
+ <span class="k">Cost of capital</span> = monthly budget ÷ new investor capital
+ </div>
+
+
+ <div class="kpis">
+ <div class="kpi">
+ <div class="kpi-index">01</div>
+ <div class="kpi-value">$7,127</div>
+ <div class="kpi-label">Ad Spend</div>
+ <div class="kpi-sub">Total, LTV</div>
+ </div>
+ <div class="kpi">
+ <div class="kpi-index">02</div>
+ <div class="kpi-value">22</div>
+ <div class="kpi-label">Connected</div>
+ <div class="kpi-sub">Contacts reached</div>
+ </div>
+ <div class="kpi">
+ <div class="kpi-index">03</div>
+ <div class="kpi-value">0</div>
+ <div class="kpi-label">Investors</div>
+ 
+ </div>
+ <div class="kpi">
+ <div class="kpi-index">04</div>
+ <div class="kpi-value">0</div>
+ <div class="kpi-label">New Investors</div>
+ 
+ </div>
+ <div class="kpi">
+ <div class="kpi-index">05</div>
+ <div class="kpi-value">$0</div>
+ <div class="kpi-label">Invested</div>
+ <div class="kpi-sub">Investors Value</div>
+ </div></div>
+
+ <section>
+ <div class="sec-head"><div class="label">Metrics · paired with cost</div></div>
+ <div class="pairs">
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Budget</div>
+ <div class="pair-value">$313</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Amount Spent</div>
+ <div class="pair-value">$7.1K</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Connected</div>
+ <div class="pair-value">22</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per Connected</div>
+ <div class="pair-value cost">$332</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Investor Deal Created</div>
+ <div class="pair-value">367</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per Investor Deal Created</div>
+ <div class="pair-value cost">$19.43</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Invested</div>
+ <div class="pair-value">$0</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">ROAS</div>
+ <div class="pair-value">—</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Investors</div>
+ <div class="pair-value">0</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per Investors</div>
+ <div class="pair-value cost">—</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">New Investor</div>
+ <div class="pair-value">0</div>
+ </div>
+ 
+ <div class="pair-cost">
+ <div class="pair-label">Cost per New Investor</div>
+ <div class="pair-value cost">—</div>
+ </div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Calls</div>
+ <div class="pair-value">82</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Bad Email Rate</div>
+ <div class="pair-value">15.9%</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div>
+ <div class="pair">
+ <div class="pair-metric">
+ <div class="pair-label">Bad Number Rate</div>
+ <div class="pair-value">237.7%</div>
+ </div>
+ <div class="pair-cost empty"></div>
+ </div></div>
+ </section>
+
+ <section>
+ <div class="sec-head"><div class="label">By ad set</div><div class="tgl-group"><button class="tgl tgl-on" data-f="active" onclick="setDeliveryFilter(this)">Active</button><button class="tgl" data-f="inactive" onclick="setDeliveryFilter(this)">Inactive</button><button class="tgl" data-f="all" onclick="setDeliveryFilter(this)">All</button></div></div>
+ <div class="table-wrap">
+ <table>
+ <thead><tr><th class="sticky">Ad Set</th><th class="num">Budget</th><th class="num">Amount Spent</th><th class="num">Connected</th><th class="num cost">Cost per Connected</th><th class="num">Investor Deal Created</th><th class="num cost">Cost per Investor Deal Created</th><th class="num">Invested</th><th class="num">ROAS</th><th class="num">Investors</th><th class="num cost">Cost per Investors</th><th class="num">New Investor</th><th class="num cost">Cost per New Investor</th><th class="num">Calls</th><th class="num">Bad Email Rate</th><th class="num">Bad Number Rate</th></tr></thead>
+ <tbody><tr data-delivery="active"><td class="sticky name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_InvestIn_Form_20260428</td><td class="num">$32.00</td><td class="num">$785</td><td class="num">—</td><td class="num cost">—</td><td class="num">17</td><td class="num cost">$45.51</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">7</td><td class="num">19.3%</td><td class="num">12.7%</td></tr><tr data-delivery="active"><td class="sticky name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_aiVid_LP_20260428</td><td class="num">$30.00</td><td class="num">$887</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">$18.6K</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="active"><td class="sticky name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Mailbox_Form_20260427</td><td class="num">$43.00</td><td class="num">$1.4K</td><td class="num">10</td><td class="num cost">$141</td><td class="num">280</td><td class="num cost">$5.03</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">41</td><td class="num">7.5%</td><td class="num">2.8%</td></tr><tr data-delivery="active"><td class="sticky name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_Spotify</td><td class="num">$48.00</td><td class="num">$217</td><td class="num">—</td><td class="num cost">—</td><td class="num">2</td><td class="num cost">$108</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="active"><td class="sticky name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_X_PDF</td><td class="num">$72.00</td><td class="num">$333</td><td class="num">—</td><td class="num cost">—</td><td class="num">4</td><td class="num cost">$95.13</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="active"><td class="sticky name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_Newspaper</td><td class="num">$48.00</td><td class="num">$199</td><td class="num">1</td><td class="num cost">$199</td><td class="num">2</td><td class="num cost">$99.31</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">2</td><td class="num">50.0%</td><td class="num">—</td></tr><tr data-delivery="active"><td class="sticky name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_Photo_Story</td><td class="num">$40.00</td><td class="num">$233</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">$233</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Adv+_Statics</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num">—</td><td class="num">53.8%</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>BROAD_Meta_Form</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>BROAD_Videos+Statics</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num">—</td><td class="num">12.7%</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Meta_Germantown2_Static</td><td class="num">$40.00</td><td class="num">$770</td><td class="num">2</td><td class="num cost">$385</td><td class="num">19</td><td class="num cost">$41.51</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">10</td><td class="num">5.4%</td><td class="num">11.4%</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Meta_Germantown2_Brian</td><td class="num">$35.00</td><td class="num">$657</td><td class="num">1</td><td class="num cost">$657</td><td class="num">9</td><td class="num cost">$74.41</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">6</td><td class="num">3.8%</td><td class="num">39.6%</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Meta_Germantown2_Phone</td><td class="num">$30.00</td><td class="num">$586</td><td class="num">—</td><td class="num cost">—</td><td class="num">12</td><td class="num cost">$48.80</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">7</td><td class="num">—</td><td class="num">37.5%</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch Pink Shirt_[2025-7-15]_SMS_Required</td><td class="num">$48.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>BROAD - F_Street_92_Static_1x1_v9</td><td class="num">$34.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Chicago_DMA_Animated _Lead_Form - Animated</td><td class="num">$25.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch Pink Shirt_[2025-9-10]_SMS_Required - Copy_Videos+Statics</td><td class="num">$87.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">2145.9%</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch_Funnel_Quiz_Videos+Statics_10.30.25</td><td class="num">$87.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Adv+_Dynamic_Statics</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Join F Street - (Landing Page "Quiz")_Interests_Video</td><td class="num">$60.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Dinner_Appleton</td><td class="num">$100</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Dinner_Brookfield</td><td class="num">$42.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Broad_Meta_Form_401k</td><td class="num">$20.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Broad_LP_Pastels_Statics</td><td class="num">$40.00</td><td class="num">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Accr.InvestorRIQ_LP_Compounding</td><td class="num">$50.00</td><td class="num">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Chicago_DMA_Animated</td><td class="num">$50.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>BROAD - F_Street_92_Static_1x1_v1</td><td class="num">$34.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>BROAD - F_Street_92_Ad6_1x1_Animated_v2</td><td class="num">$34.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>92_Static_1x1_2025_09_18</td><td class="num">$75.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>BROAD - F_Street_92_Static_1x1_v1 - Copy</td><td class="num">$34.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>BROAD - F_Street_92_Static_1x1_v7 - Copy</td><td class="num">$51.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Join F Street - Copy(Landing Page "Quiz")_Interests</td><td class="num">$60.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_BearCreek_20251119 - Copy</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Broad_LP_Blonde_AI</td><td class="num">$36.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Broad_LP_Pastels_Statics</td><td class="num">$80.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Dinner_Madison - V2</td><td class="num">$45.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_March_Madness_ani</td><td class="num">$15.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Reviews</td><td class="num">$40.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Accr.InvestorRIQ_LP_Pastel_Statics</td><td class="num">$50.00</td><td class="num">—</td><td class="num">1</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Broad_LP_10%_Statics</td><td class="num">$30.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num">—</td><td class="num">53.8%</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>Broad_LP_Accredited_Investors</td><td class="num">$30.00</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">0</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Meta_Germantown2_Josh</td><td class="num">$35.00</td><td class="num">$163</td><td class="num">1</td><td class="num cost">$163</td><td class="num">1</td><td class="num cost">$163</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">1</td><td class="num">—</td><td class="num">—</td></tr><tr data-delivery="inactive" style="display:none"><td class="sticky name"><span class="del-dot del-inactive"></span>FStreet_Dinner_Generic</td><td class="num">$40.00</td><td class="num">$890</td><td class="num">5</td><td class="num cost">$178</td><td class="num">14</td><td class="num cost">$62.12</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">4</td><td class="num">9.3%</td><td class="num">6.5%</td></tr></tbody>
+ <tfoot id="tf-active"><tr><td class="sticky name">Total · Active</td><td class="num">$313</td><td class="num">$4.1K</td><td class="num">11</td><td class="num cost">$369</td><td class="num">305</td><td class="num cost">$13.30</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">51</td><td class="num">25.6%</td><td class="num">7.8%</td></tr></tfoot>
+ <tfoot id="tf-inactive" style="display:none"><tr><td class="sticky name">Total · Inactive</td><td class="num">$1.4K</td><td class="num">$3.1K</td><td class="num">11</td><td class="num cost">$292</td><td class="num">61</td><td class="num cost">$49.93</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">31</td><td class="num">6.2%</td><td class="num">295.2%</td></tr></tfoot>
+ <tfoot id="tf-all" style="display:none"><tr><td class="sticky name">Total · All</td><td class="num">$1.8K</td><td class="num">$7.1K</td><td class="num">22</td><td class="num cost">$332</td><td class="num">367</td><td class="num cost">$19.43</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">—</td><td class="num cost">—</td><td class="num">82</td><td class="num">15.9%</td><td class="num">237.7%</td></tr></tfoot>
+ </table>
+ </div>
+ </section>
+
+ <section>
+ <div class="sec-head"><div class="label">Analysis</div></div>
+ <div class="analysis"><ul><li><strong>0 new investors</strong> attributed across 12 ad sets this period (last 30 days).</li><li><strong>$0</strong> in total invested capital (Investors Value).</li></ul></div>
+ </section>
+
+ <footer>F Street · Investor Relations · Cometly Linear Paid / LTV · Last 30 Days · Generated Jul 15, 9:31 AM CT</footer>
+
+</div>
+
+<script>
+function setDeliveryFilter(btn) {
+ var f = btn.getAttribute('data-f');
+ document.querySelectorAll('.tgl').forEach(function(b){ b.classList.toggle('tgl-on', b === btn); });
+ document.querySelectorAll('tbody tr[data-delivery]').forEach(function(row){
+  row.style.display = (f === 'all' || row.getAttribute('data-delivery') === f) ? '' : 'none';
+ });
+ ['active','inactive','all'].forEach(function(k){
+  var tf = document.getElementById('tf-' + k);
+  if (tf) tf.style.display = (k === f) ? '' : 'none';
+ });
+}
+</script>
+
+<script>
+(function(){
+ var DAYS_IN_MONTH = 30.4;
+ var DEFAULTS = { leads:14, cpa:35, setter:30, mitch:50, conv:30, avgInv:75000 };
+ var IDS = Object.keys(DEFAULTS);
+ var $ = function(id){ return document.getElementById(id); };
+
+ function num(id){ var v = parseFloat($(id).value); return isFinite(v) ? v : 0; }
+ function money(n){ return isFinite(n) ? '$' + Math.round(n).toLocaleString('en-US') : '—'; }
+ function moneyShort(n){
+ if (!isFinite(n) || n === 0) return '$0';
+ if (Math.abs(n) >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+ if (Math.abs(n) >= 1e3) return '$' + (n/1e3).toFixed(1) + 'K';
+ return '$' + n.toFixed(0);
+ }
+ function count(n){
+ return isFinite(n) ? n.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1}) : '—';
+ }
+
+ function recalc(){
+ var leads = num('leads');
+ var cpa = num('cpa');
+ var setter = num('setter') / 100;
+ var mitch = num('mitch') / 100;
+ var conv = num('conv') / 100;
+ var avgInv = num('avgInv');
+
+ var monthlyLeads = leads * DAYS_IN_MONTH;
+ var setterConn = monthlyLeads * setter;
+ var mitchConn = setterConn * mitch;
+ var investors = mitchConn * conv;
+ var monthlyBudget = cpa * monthlyLeads;
+ var dailyBudget = monthlyBudget / DAYS_IN_MONTH;
+ var newCapital = investors * avgInv;
+ var coc = newCapital > 0 ? (monthlyBudget / newCapital) * 100 : NaN;
+
+ $('oMonthlyLeads').textContent = count(monthlyLeads);
+ $('oSetterConn').textContent = count(setterConn);
+ $('oMitchConn').textContent = count(mitchConn);
+ $('oInvestors').textContent = count(investors);
+ $('oDailyBudget').textContent = money(dailyBudget);
+ $('oMonthlyBudget').textContent = money(monthlyBudget);
+ $('oNewCapital').textContent = moneyShort(newCapital);
+ $('oCoC').textContent = isFinite(coc) ? coc.toFixed(2) + '%' : '—';
+ }
+
+ IDS.forEach(function(id){ $(id).addEventListener('input', recalc); });
+ $('calcReset').addEventListener('click', function(){
+ IDS.forEach(function(id){ $(id).value = DEFAULTS[id]; });
+ recalc();
+ });
+ recalc();
+})();
+</script>
+
+</body>
+</html>
