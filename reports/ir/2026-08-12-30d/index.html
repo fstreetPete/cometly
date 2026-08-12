@@ -55,6 +55,7 @@ section{margin-bottom:36px}
 .strip{display:grid;border:1px solid var(--line);background:var(--ink-2);margin-bottom:36px}
 .strip.c3{grid-template-columns:repeat(3,1fr)}
 .strip.c4{grid-template-columns:repeat(4,1fr)}
+.strip.c5{grid-template-columns:repeat(5,1fr)}
 .strip .cell{min-width:0;padding:18px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
 .strip .cell:last-child{border-right:0}
 .cell-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:.05em;
@@ -222,13 +223,13 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
       <div class="kpi-label">Ad Spend</div>
     </div>
     <div class="kpi">
-      <div class="kpi-value">171</div>
+      <div class="kpi-value">1,409</div>
       <div class="kpi-label">Calls</div>
     </div>
     <div class="kpi">
-      <div class="kpi-value">17</div>
+      <div class="kpi-value">93</div>
       <div class="kpi-label">Connected</div>
-      <div class="kpi-sub">$875 each</div>
+      <div class="kpi-sub">6.6% rate</div>
     </div>
     <div class="kpi">
       <div class="kpi-value">1</div>
@@ -269,20 +270,21 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 <!-- CALL SETTER ACTIVITY -->
 <div class="ppanel" id="p-calling" role="tabpanel" aria-labelledby="tab-calling" hidden>
 
-  <div class="strip c4">
-    <div class="cell hero"><div class="cell-label">Calls</div><div class="out">171</div></div>
-    <div class="cell"><div class="cell-label">Calls per day</div><div class="out">5.7</div></div>
-    <div class="cell"><div class="cell-label">Connected</div><div class="out">17</div></div>
-    <div class="cell"><div class="cell-label">Connect rate</div><div class="out key">9.9%</div></div>
-    <div class="cell"><div class="cell-label">Calls per connect</div><div class="out">10.1</div></div>
-    <div class="cell"><div class="cell-label">Cost per connected</div><div class="out money">$875</div></div>
-    <div class="cell"><div class="cell-label">Passed to Mitch</div><div class="out none">—</div></div>
-    <div class="cell"><div class="cell-label">Bad number rate</div><div class="out">8.3%</div></div>
+  <div class="strip c5">
+    <div class="cell hero"><div class="cell-label">Calls</div><div class="out">1,409</div></div>
+    <div class="cell"><div class="cell-label">Avg / day</div><div class="out">64.0</div></div>
+    <div class="cell"><div class="cell-label">Connected</div><div class="out">93</div></div>
+    <div class="cell"><div class="cell-label">Connect rate</div><div class="out key">6.6%</div></div>
+    <div class="cell"><div class="cell-label">Bad number rate</div><div class="out">5.6%</div></div>
   </div>
 
   <section>
-    <div class="sec-head"><div class="label">Call volume</div></div>
-    <div class="placeholder">Daily call chart</div>
+    <div class="sec-head"><div class="label">Investor Pipeline — Stage Snapshot</div></div>
+    <div class="strip c3">
+      <div class="cell"><div class="cell-label">Call Setter [Connected]</div><div class="out">4</div></div>
+      <div class="cell"><div class="cell-label">Call Setter [Booked]</div><div class="out">3</div></div>
+      <div class="cell hero"><div class="cell-label">Connected</div><div class="out">824</div></div>
+    </div>
   </section>
 
 </div>
