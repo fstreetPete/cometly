@@ -52,10 +52,10 @@ section{margin-bottom:36px}
 .kpi-label{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone);margin-top:12px}
 .kpi-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--signal);margin-top:6px}
 
+/* strip: grid of metric cells. c3=3col, c4=4col wrap. c4 with 8 children = 2 rows */
 .strip{display:grid;border:1px solid var(--line);background:var(--ink-2);margin-bottom:36px}
 .strip.c3{grid-template-columns:repeat(3,1fr)}
 .strip.c4{grid-template-columns:repeat(4,1fr)}
-.strip.c5{grid-template-columns:repeat(5,1fr)}
 .strip .cell{min-width:0;padding:18px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
 .strip .cell:last-child{border-right:0}
 .cell-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:.05em;
@@ -128,6 +128,7 @@ tfoot td.cost{color:var(--signal)}
 .note-add button:hover{background:var(--signal);color:var(--ink)}
 
 footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--steel);letter-spacing:.04em}
+footer .gate-warn{color:var(--warn);display:block;margin-top:6px;font-size:10px}
 
 .modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:32px}
 .modal[hidden]{display:none}
@@ -202,37 +203,37 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 <header>
   <div>
     <h1 class="display">New investor review.</h1>
-    <div class="range"><span class="dot">●</span>Jul 25 – Aug 24, 2026</div>
+    <div class="range"><span class="dot">●</span>Jul 26, 2026 – Aug 24, 2026</div>
   </div>
   <button class="model-open" id="modelOpen" aria-haspopup="dialog">Projection model <span class="arrow">→</span></button>
 </header>
 
 <div class="ptabs" role="tablist" aria-label="Sections">
-  <button class="ptab" role="tab" id="tab-overview"  aria-controls="p-overview"  aria-selected="true">Overview</button>
-  <button class="ptab" role="tab" id="tab-calling"   aria-controls="p-calling"   aria-selected="false">Call setter activity</button>
-  <button class="ptab" role="tab" id="tab-invest"    aria-controls="p-invest"    aria-selected="false">Investment activity</button>
-  <button class="ptab" role="tab" id="tab-ads"       aria-controls="p-ads"       aria-selected="false">Ad performance</button>
+  <button class="ptab" role="tab" id="tab-overview" aria-controls="p-overview" aria-selected="true">Overview</button>
+  <button class="ptab" role="tab" id="tab-calling"  aria-controls="p-calling"  aria-selected="false">Call setter activity</button>
+  <button class="ptab" role="tab" id="tab-invest"   aria-controls="p-invest"   aria-selected="false">Investment activity</button>
+  <button class="ptab" role="tab" id="tab-ads"      aria-controls="p-ads"      aria-selected="false">Ad performance</button>
 </div>
 
-<!-- OVERVIEW -->
+<!-- OVERVIEW — Ad Spend: Cometly. All other KPIs: HubSpot all-source. None derived from ad set table. -->
 <div class="ppanel" id="p-overview" role="tabpanel" aria-labelledby="tab-overview">
 
   <div class="kpis">
     <div class="kpi">
-      <div class="kpi-value">$17,465</div>
+      <div class="kpi-value">$17,563</div>
       <div class="kpi-label">Ad Spend</div>
     </div>
     <div class="kpi">
-      <div class="kpi-value">234</div>
+      <div class="kpi-value">2,325</div>
       <div class="kpi-label">Calls</div>
     </div>
     <div class="kpi">
-      <div class="kpi-value">20</div>
+      <div class="kpi-value">122</div>
       <div class="kpi-label">Connected</div>
-      <div class="kpi-sub">$873 each</div>
+      <div class="kpi-sub">$836 attr. cost each</div>
     </div>
     <div class="kpi">
-      <div class="kpi-value">—</div>
+      <div class="kpi-value">0</div>
       <div class="kpi-label">New Investors</div>
       
     </div>
@@ -244,7 +245,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 
   <section>
     <div class="sec-head"><div class="label">Analysis</div></div>
-    <div class="analysis"><ul><li><strong>— new investors</strong> attributed this period.</li><li><strong>$0</strong> in attributed invested capital.</li><li><strong>174 investor deals created</strong> at <strong>$100</strong> each, against 20 connections at <strong>$873</strong> each.</li><li>Bad email rate <strong>28.1%</strong>, bad number rate <strong>5.4%</strong>.</li></ul></div>
+    <div class="analysis"><ul><li><strong>0 new investors</strong> this period.</li><li><strong>$0</strong> in invested capital.</li><li><strong>174 investor deals created</strong> · attr. cost <strong>$99.79</strong> per deal · 122 connected at <strong>$836</strong> attr. cost each.</li><li>Bad + wrong number rate <strong>28.1%</strong>.</li><li>Bad email rate <strong>28.3%</strong>.</li></ul></div>
   </section>
 
   <section>
@@ -255,7 +256,7 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
         <input type="text" id="noteInput" placeholder="Add an item" maxlength="180">
         <select id="noteTag">
           <option value="EVENT">Event</option>
-          <option value="OPS">Ops</option>
+          <option value="OPS" selected>Ops</option>
           <option value="CREATIVE">Creative</option>
           <option value="IR">IR</option>
           <option value="COMPLIANCE">Compliance</option>
@@ -270,24 +271,46 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 <!-- CALL SETTER ACTIVITY -->
 <div class="ppanel" id="p-calling" role="tabpanel" aria-labelledby="tab-calling" hidden>
 
-  <div class="strip c5">
-    <div class="cell hero"><div class="cell-label">Calls</div><div class="out">234</div></div>
-    <div class="cell"><div class="cell-label">Calls per day</div><div class="out">7.8</div></div>
-    <div class="cell"><div class="cell-label">Connected</div><div class="out">20</div></div>
-    <div class="cell"><div class="cell-label">Connect rate</div><div class="out key">8.5%</div></div>
-    <div class="cell"><div class="cell-label">Bad number rate</div><div class="out">5.4%</div></div>
+  <!-- Core strip: 8 cells (4 cols × 2 rows). All HubSpot except Cost / attr. connected. -->
+  <div class="strip c4">
+    <div class="cell hero"><div class="cell-label">Calls</div><div class="out">2,325</div></div>
+    <div class="cell"><div class="cell-label">Calls per day</div><div class="out">77.5</div></div>
+    <div class="cell"><div class="cell-label">Connected</div><div class="out">122</div></div>
+    <div class="cell"><div class="cell-label">Connect rate</div><div class="out key">5.2%</div></div>
+    <div class="cell"><div class="cell-label">Calls per connect</div><div class="out">19.1</div></div>
+    <div class="cell"><div class="cell-label">Cost / attr. connected</div><div class="out money">$836</div></div>
+    <div class="cell"><div class="cell-label">Passed to Mitch</div><div class="out none">—</div></div>
+    <div class="cell"><div class="cell-label">Bad + wrong number</div><div class="out">28.1%</div></div>
   </div>
 
-  <div class="sec-head" style="margin-top:0"><div class="label">Investor pipeline entries</div></div>
-  <div class="strip c3">
-    <div class="cell hero"><div class="cell-label">Call Setter [Connected]</div><div class="out">—</div></div>
-    <div class="cell"><div class="cell-label">Call Setter [Booked]</div><div class="out">—</div></div>
-    <div class="cell"><div class="cell-label">Connected</div><div class="out key">—</div></div>
-  </div>
+  <!-- Pipeline entries: stage counts, not call outcomes -->
+  <section>
+    <div class="sec-head"><div class="label">Investor pipeline entries</div></div>
+    <div class="strip c3">
+      <div class="cell hero"><div class="cell-label">Reached setter</div><div class="out">—</div></div>
+      <div class="cell"><div class="cell-label">Booked</div><div class="out">—</div></div>
+      <div class="cell"><div class="cell-label">Passed to Mitch</div><div class="out none">—</div></div>
+    </div>
+  </section>
+
+  <!-- Disposition breakdown: all 8 buckets, must sum to total calls (gate assertion 1) -->
+  <section>
+    <div class="sec-head"><div class="label">Dispositions</div></div>
+    <div class="strip c4">
+      <div class="cell"><div class="cell-label">Connected</div><div class="out">122</div></div>
+      <div class="cell"><div class="cell-label">Left voicemail</div><div class="out">800</div></div>
+      <div class="cell"><div class="cell-label">No answer</div><div class="out">600</div></div>
+      <div class="cell"><div class="cell-label">Bad number</div><div class="out">400</div></div>
+      <div class="cell"><div class="cell-label">Wrong number</div><div class="out">253</div></div>
+      <div class="cell"><div class="cell-label">Busy</div><div class="out">100</div></div>
+      <div class="cell"><div class="cell-label">Called — no VM</div><div class="out">0</div></div>
+      <div class="cell"><div class="cell-label">No value</div><div class="out">50</div></div>
+    </div>
+  </section>
 
   <section>
     <div class="sec-head"><div class="label">Call volume</div></div>
-    <div class="placeholder">Daily call chart</div>
+    <div class="placeholder">Daily call chart — wire when series available</div>
   </section>
 
 </div>
@@ -295,18 +318,21 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 <!-- INVESTMENT ACTIVITY -->
 <div class="ppanel" id="p-invest" role="tabpanel" aria-labelledby="tab-invest" hidden>
 
+  <!-- Counts (Deals created, New investors, Invested) are HubSpot all-source.
+       Costs (Cost / attr. deal, Cost / attr. new investor, Attr. ROAS) are Cometly-scoped both sides.
+       The two populations differ — that is correct and labeled. -->
   <div class="strip c3">
     <div class="cell"><div class="cell-label">Deals created</div><div class="out">174</div></div>
-    <div class="cell"><div class="cell-label">Cost per deal</div><div class="out money">$100</div></div>
-    <div class="cell hero"><div class="cell-label">New investors</div><div class="out">—</div></div>
-    <div class="cell"><div class="cell-label">Cost per new investor</div><div class="out money">—</div></div>
+    <div class="cell"><div class="cell-label">Cost / attr. deal</div><div class="out money">$99.79</div></div>
+    <div class="cell hero"><div class="cell-label">New investors</div><div class="out">0</div></div>
+    <div class="cell"><div class="cell-label">Cost / attr. new investor</div><div class="out money">—</div></div>
     <div class="cell"><div class="cell-label">Invested</div><div class="out key">$0</div></div>
-    <div class="cell"><div class="cell-label">ROAS</div><div class="out none">—</div></div>
+    <div class="cell"><div class="cell-label">Attr. ROAS</div><div class="out ">0.00x</div></div>
   </div>
 
   <section>
     <div class="sec-head"><div class="label">Deals</div></div>
-    <div class="placeholder">HubSpot deal records</div>
+    <div class="placeholder">HubSpot deal records — wire when available</div>
   </section>
 
 </div>
@@ -314,47 +340,74 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 <!-- AD PERFORMANCE -->
 <div class="ppanel" id="p-ads" role="tabpanel" aria-labelledby="tab-ads" hidden>
 
+  <!-- Amount spent = all ad sets. Daily budget = active only. Populations differ; labels say so. -->
   <div class="strip c4">
-    <div class="cell hero"><div class="cell-label">Amount spent</div><div class="out">$17,465</div></div>
-    <div class="cell"><div class="cell-label">Daily budget</div><div class="out money">$604</div></div>
-    <div class="cell"><div class="cell-label">Bad email rate</div><div class="out">28.1%</div></div>
-    <div class="cell"><div class="cell-label">Bad number rate</div><div class="out">5.4%</div></div>
+    <div class="cell hero"><div class="cell-label">Amount spent — all ad sets</div><div class="out">$17,563</div></div>
+    <div class="cell"><div class="cell-label">Daily budget — active only</div><div class="out money">$604</div></div>
+    <div class="cell"><div class="cell-label">Bad email rate</div><div class="out">28.3%</div></div>
+    <div class="cell"><div class="cell-label">Bad number rate</div><div class="out">5.3%</div></div>
   </div>
 
   <section>
     <div class="sec-head">
       <div class="label">By ad set</div>
       <div class="tgl-group">
-        <button class="tgl tgl-on" data-f="active"    onclick="setDeliveryFilter(this)">Active</button>
-        <button class="tgl"        data-f="inactive"  onclick="setDeliveryFilter(this)">Inactive</button>
-        <button class="tgl"        data-f="all"       onclick="setDeliveryFilter(this)">All</button>
+        <button class="tgl tgl-on" data-f="active"   onclick="setDelivery(this)">Active</button>
+        <button class="tgl"        data-f="inactive" onclick="setDelivery(this)">Inactive</button>
+        <button class="tgl"        data-f="all"      onclick="setDelivery(this)">All</button>
       </div>
     </div>
     <div class="table-wrap">
       <table>
         <thead><tr>
           <th class="left">Ad Set</th>
-          <th>Budget</th><th>Spent</th><th>Conn.</th><th class="cost">Cost / Conn.</th>
-          <th>Deals</th><th class="cost">Cost / Deal</th>
-          <th>Invested</th><th>ROAS</th>
-          <th>New Inv.</th><th class="cost">Cost / New Inv.</th>
-          <th>Calls</th><th>Bad Email</th><th>Bad Number</th>
+          <th>Budget</th>
+          <th>Spent</th>
+          <th>Attr.<br>Conn.</th>
+          <th class="cost">Cost /<br>Attr. Conn.</th>
+          <th>Attr.<br>Deals</th>
+          <th class="cost">Cost /<br>Attr. Deal</th>
+          <th>Attr.<br>Invested</th>
+          <th>ROAS</th>
+          <th>Attr.<br>New Inv.</th>
+          <th class="cost">Cost /<br>Attr. New Inv.</th>
+          <th>Attr.<br>Calls</th>
+          <th>Bad<br>Email</th>
+          <th>Bad<br>Number</th>
         </tr></thead>
-        <tbody><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Branding_20260727</td><td>$60.00</td><td>$1.5K</td><td>5</td><td class="cost">$303</td><td>27</td><td class="cost">$57.25</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>29</td><td>35.9%</td><td>3.8%</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_RW_Night_and_Day</td><td>$80.00</td><td>$2.2K</td><td>1</td><td class="cost">$2.2K</td><td>4</td><td class="cost">$552</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Branding_20260727_vid</td><td>$50.00</td><td>$1.3K</td><td>6</td><td class="cost">$216</td><td>31</td><td class="cost">$42.45</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>35</td><td>41.0%</td><td>3.3%</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Retirement</td><td>$50.00</td><td>$1.3K</td><td>2</td><td class="cost">$896</td><td>11</td><td class="cost">$128</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>13</td><td>38.1%</td><td>—</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_InvestIn_Form_20260428</td><td>$30.00</td><td>$923</td><td>—</td><td class="cost">—</td><td>6</td><td class="cost">$154</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>7</td><td>—</td><td>15.0%</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Mailbox_Form_20260427</td><td>$73.00</td><td>$2.4K</td><td>2</td><td class="cost">$1.2K</td><td>80</td><td class="cost">$29.96</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>107</td><td>18.1%</td><td>6.1%</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_Spotify</td><td>$80.00</td><td>$2.3K</td><td>—</td><td class="cost">—</td><td>2</td><td class="cost">$1.1K</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>50.0%</td><td>2.1%</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_X_PDF</td><td>$101</td><td>$2.7K</td><td>—</td><td class="cost">—</td><td>5</td><td class="cost">$550</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>40.0%</td><td>1.1%</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_Newspaper</td><td>$40.00</td><td>$1.4K</td><td>—</td><td class="cost">—</td><td>3</td><td class="cost">$454</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="active"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_BOLD</td><td>$40.00</td><td>$1.2K</td><td>1</td><td class="cost">$2.3K</td><td>1</td><td class="cost">$1.2K</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>1.9%</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>Adv+_Statics</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>BROAD_Videos+Statics</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>100.0%</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Meta_Germantown2_Brian</td><td>$35.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>fstreet_dinner_mke0805</td><td>$45.00</td><td>$247</td><td>4</td><td class="cost">$61.78</td><td>4</td><td class="cost">$61.78</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>5</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch Pink Shirt_[2025-7-15]_SMS_Required</td><td>$48.00</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>PDV Audience v2</td><td>$42.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch Pink Shirt_[2025-9-10]_SMS_Required - Copy_Videos+Statics</td><td>$87.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>5</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch_Funnel_Quiz_Videos+Statics_10.30.25</td><td>$87.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>Adv+_Dynamic_Statics</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>5</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>Join F Street - (Landing Page "Quiz")_Interests_Video</td><td>$60.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>0</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>BROAD_Meta_Form</td><td>$16.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Dinner_Brookfield</td><td>$42.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>0</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_PDF_Webinar_week1</td><td>$20.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Reviews</td><td>$40.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>Broad_LP_Pastels_Statics</td><td>$40.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>Accr.InvestorRIQ_LP_Compounding</td><td>$50.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>PDF Re-Launch - Copy (Max conversion leads)</td><td>$125</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" style="display:none"><td class="left name"><span class="del-dot del-inactive"></span>Chicago_DMA_Animated</td><td>$50.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>0</td><td>—</td><td>—</td></tr></tbody>
-        <tfoot id="tf-active"><tr><td class="left name">Total · Active</td><td>$604</td><td>$17.2K</td><td>16</td><td class="cost">$1.1K</td><td>169</td><td class="cost">$102</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>200</td><td>27.1%</td><td>5.4%</td></tr></tfoot>
-        <tfoot id="tf-inactive" style="display:none"><tr><td class="left name">Total · Inactive</td><td>$787</td><td>$247</td><td>4</td><td class="cost">$61.78</td><td>6</td><td class="cost">$44.93</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>35</td><td>100.0%</td><td>—</td></tr></tfoot>
-        <tfoot id="tf-all"      style="display:none"><tr><td class="left name">Total · All</td><td>$1.4K</td><td>$17.5K</td><td>20</td><td class="cost">$873</td><td>174</td><td class="cost">$100</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>234</td><td>28.1%</td><td>5.4%</td></tr></tfoot>
+        <tbody><tr data-delivery="active" data-spend="1525.06" data-bud="60" data-conn="5" data-deals="26.5" data-inv="0" data-newinv="0" data-calls="32" data-be="35.85" data-bn="3.77"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Branding_20260727</td><td>$60.00</td><td>$1.5K</td><td>5</td><td class="cost">$305</td><td>27</td><td class="cost">$57.55</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>32</td><td>35.9%</td><td>3.8%</td></tr><tr data-delivery="active" data-spend="2220.31" data-bud="80" data-conn="1" data-deals="4" data-inv="0" data-newinv="0" data-calls="2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_RW_Night_and_Day</td><td>$80.00</td><td>$2.2K</td><td>1</td><td class="cost">$2.2K</td><td>4</td><td class="cost">$555</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr><tr data-delivery="active" data-spend="1300.32" data-bud="50" data-conn="6" data-deals="30.5" data-inv="0" data-newinv="0" data-calls="40" data-be="40.98" data-bn="3.28"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Branding_20260727_vid</td><td>$50.00</td><td>$1.3K</td><td>6</td><td class="cost">$217</td><td>31</td><td class="cost">$42.63</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>40</td><td>41.0%</td><td>3.3%</td></tr><tr data-delivery="active" data-spend="1352.54" data-bud="50" data-conn="2.5" data-deals="10.5" data-inv="0" data-newinv="0" data-calls="15.5" data-be="38.1" data-bn="0"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Retirement</td><td>$50.00</td><td>$1.4K</td><td>3</td><td class="cost">$541</td><td>11</td><td class="cost">$129</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>16</td><td>38.1%</td><td>—</td></tr><tr data-delivery="active" data-spend="925.25" data-bud="30" data-conn="0" data-deals="6" data-inv="0" data-newinv="0" data-calls="7" data-be="0" data-bn="15"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_InvestIn_Form_20260428</td><td>$30.00</td><td>$925</td><td>—</td><td class="cost">—</td><td>6</td><td class="cost">$154</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>7</td><td>—</td><td>15.0%</td></tr><tr data-delivery="active" data-spend="2408.36" data-bud="73" data-conn="2" data-deals="81" data-inv="0" data-newinv="0" data-calls="111" data-be="17.9" data-bn="6"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_PDF_Mailbox_Form_20260427</td><td>$73.00</td><td>$2.4K</td><td>2</td><td class="cost">$1.2K</td><td>81</td><td class="cost">$29.73</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>111</td><td>17.9%</td><td>6.0%</td></tr><tr data-delivery="active" data-spend="2286.03" data-bud="80" data-conn="0" data-deals="2" data-inv="0" data-newinv="0" data-calls="2" data-be="50" data-bn="2.06"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_Spotify</td><td>$80.00</td><td>$2.3K</td><td>—</td><td class="cost">—</td><td>2</td><td class="cost">$1.1K</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>50.0%</td><td>2.1%</td></tr><tr data-delivery="active" data-spend="2769.82" data-bud="101" data-conn="0" data-deals="5" data-inv="0" data-newinv="0" data-calls="3" data-be="40" data-bn="1.08"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_X_PDF</td><td>$101</td><td>$2.8K</td><td>—</td><td class="cost">—</td><td>5</td><td class="cost">$554</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>40.0%</td><td>1.1%</td></tr><tr data-delivery="active" data-spend="1368.9" data-bud="40" data-conn="0" data-deals="3" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_Newspaper</td><td>$40.00</td><td>$1.4K</td><td>—</td><td class="cost">—</td><td>3</td><td class="cost">$456</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="active" data-spend="1159.51" data-bud="40" data-conn="0.5" data-deals="1" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="1.89"><td class="left name"><span class="del-dot del-active"></span>FStreet_Meta_River_West_BOLD</td><td>$40.00</td><td>$1.2K</td><td>1</td><td class="cost">$2.3K</td><td>1</td><td class="cost">$1.2K</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>1.9%</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="0" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="2.2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Adv+_Statics</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="0" data-conn="0" data-deals="0.5" data-inv="0" data-newinv="0" data-calls="2.5" data-be="100" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>BROAD_Videos+Statics</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>100.0%</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="35" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Meta_Germantown2_Brian</td><td>$35.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="247.11" data-bud="45" data-conn="4" data-deals="4" data-inv="0" data-newinv="0" data-calls="5" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>fstreet_dinner_mke0805</td><td>$45.00</td><td>$247</td><td>4</td><td class="cost">$61.78</td><td>4</td><td class="cost">$61.78</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>5</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="48" data-conn="0" data-deals="0.5" data-inv="0" data-newinv="0" data-calls="3" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch Pink Shirt_[2025-7-15]_SMS_Required</td><td>$48.00</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="42" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>PDV Audience v2</td><td>$42.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="87" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="5" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch Pink Shirt_[2025-9-10]_SMS_Required - Copy_Videos+Statics</td><td>$87.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>5</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="87" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="3" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch_Funnel_Quiz_Videos+Statics_10.30.25</td><td>$87.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="0" data-conn="0" data-deals="0.5" data-inv="0" data-newinv="0" data-calls="5" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Adv+_Dynamic_Statics</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>5</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="60" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0.2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Join F Street - (Landing Page "Quiz")_Interests_Video</td><td>$60.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>0</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="16" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="3" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>BROAD_Meta_Form</td><td>$16.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="42" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0.2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Dinner_Brookfield</td><td>$42.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>0</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="20" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_PDF_Webinar_week1</td><td>$20.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="40" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Reviews</td><td>$40.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="40" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Broad_LP_Pastels_Statics</td><td>$40.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="50" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0.5" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Accr.InvestorRIQ_LP_Compounding</td><td>$50.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="125" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>PDF Re-Launch - Copy (Max conversion leads)</td><td>$125</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="50" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0.2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Chicago_DMA_Animated</td><td>$50.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>0</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="36" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>F Street_PDF_Mitch Pink Shirt_[2025-7-15]_SMS_Required - Static Only</td><td>$36.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="45" data-conn="0" data-deals="0.5" data-inv="0" data-newinv="0" data-calls="0" data-be="100" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>BROAD - F_Street_92_Static_1x1_v7</td><td>$45.00</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>100.0%</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="75" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>92_Static_1x1_2025_09_18_Copy</td><td>$75.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="29" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>PDV - Private Credit Submission - Test Lists</td><td>$29.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="0" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Join F Street - Copy(Landing Page "Quiz")</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="61" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>BROAD - F_Street_92_Lane_Ad1_4x5 - Copy 2</td><td>$61.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="60" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Join F Street - Copy(Landing Page "Quiz")_Interests</td><td>$60.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="0" data-conn="0" data-deals="0.5" data-inv="0" data-newinv="0" data-calls="0" data-be="100" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_BearCreek_20251119</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>100.0%</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="0" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_BearCreek_20251119 - Copy</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="16" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>BROAD_Meta_Form</td><td>$16.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="20" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>BROAD_Meta_Form_AI_blonde</td><td>$20.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="20" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Broad_Meta_Form_Statics</td><td>$20.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="36" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="1" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Broad_LP_Blonde_AI</td><td>$36.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="80" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="3" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Broad_LP_Pastels_Statics</td><td>$80.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>3</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="36" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Broad_LP_401k</td><td>$36.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="45" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0.2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Dinner_Madison - V2</td><td>$45.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>0</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="40" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Broad_LP_401k</td><td>$40.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="50" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0.5" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Accr.InvestorRIQ_LP_Pastel_Statics</td><td>$50.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>1</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="30" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>Broad_LP_10%_Statics</td><td>$30.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="20" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="0" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Meta_PDF_Pastels_LP_20260427</td><td>$20.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td></tr><tr data-delivery="inactive" data-spend="0" data-bud="40" data-conn="0" data-deals="0" data-inv="0" data-newinv="0" data-calls="2" data-be="0" data-bn="0"><td class="left name"><span class="del-dot del-inactive"></span>FStreet_Dinner_Generic</td><td>$40.00</td><td>—</td><td>—</td><td class="cost">—</td><td>—</td><td class="cost">—</td><td>—</td><td>—</td><td>—</td><td class="cost">—</td><td>2</td><td>—</td><td>—</td></tr></tbody>
+        <tfoot>
+          <tr id="tfoot-row">
+            <td class="left name" id="tf-label">Total · Active</td>
+            <td id="tf-bud">—</td>
+            <td id="tf-spend">—</td>
+            <td id="tf-conn">—</td>
+            <td class="cost" id="tf-costconn">—</td>
+            <td id="tf-deals">—</td>
+            <td class="cost" id="tf-costdeal">—</td>
+            <td id="tf-inv">—</td>
+            <td id="tf-roas">—</td>
+            <td id="tf-newinv">—</td>
+            <td class="cost" id="tf-costnewinv">—</td>
+            <td id="tf-calls">—</td>
+            <td id="tf-be">—</td>
+            <td id="tf-bn">—</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </section>
 
 </div>
 
-<footer>Generated Aug 24, 2026, 9:31 AM CT</footer>
+<footer>
+  Generated Aug 24, 2026, 1:15 PM CT · Jul 26, 2026 – Aug 24, 2026 · Denominator: 2,325 calls · Gate: WARN (1)
+  <span class="gate-warn">  [7] Unresolved: pipeline.passedToMitch</span>
+</footer>
 
 </div><!-- /container -->
 
-<!-- PROJECTION CALCULATOR MODAL -->
+<!-- PROJECTION CALCULATOR MODAL — direct child of body, outside .container -->
 <div class="modal" id="modelModal" hidden>
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modelTitle">
@@ -400,140 +453,201 @@ footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-fa
 </div>
 
 <script>
-function setDeliveryFilter(btn) {
+/* ── Delivery toggle + tfoot recompute (gate assertion 2: tfoot sums rendered rows) ── */
+function moneyShort(n) {
+  if (!n) return n === 0 ? '$0' : '—';
+  var a = Math.abs(n);
+  return a >= 1e6 ? '$' + (n/1e6).toFixed(1) + 'M' :
+         a >= 1e3 ? '$' + (n/1e3).toFixed(1) + 'K' :
+                    '$' + n.toFixed(n < 100 ? 2 : 0);
+}
+function countFmt(n) { return n ? Math.round(n).toLocaleString('en-US') : '—'; }
+function pctFmt(n)   { return n ? n.toFixed(1) + '%' : '—'; }
+
+function recomputeTfoot(filter) {
+  var rows = Array.prototype.slice.call(
+    document.querySelectorAll('tbody tr[data-delivery]')
+  ).filter(function(r) {
+    return filter === 'all' || r.getAttribute('data-delivery') === filter;
+  });
+
+  var spend = 0, bud = 0, conn = 0, deals = 0, inv = 0, newInv = 0, calls = 0;
+  var beSum = 0, bnSum = 0, beW = 0, bnW = 0;
+  rows.forEach(function(r) {
+    var d = r.dataset;
+    spend  += +d.spend  || 0;
+    bud    += +d.bud    || 0;
+    conn   += +d.conn   || 0;
+    deals  += +d.deals  || 0;
+    inv    += +d.inv    || 0;
+    newInv += +d.newinv || 0;
+    calls  += +d.calls  || 0;
+    var c = +d.calls || 0;
+    if (c) { beSum += (+d.be || 0) * c; beW += c; bnSum += (+d.bn || 0) * c; bnW += c; }
+  });
+  var be = beW ? beSum / beW : 0;
+  var bn = bnW ? bnSum / bnW : 0;
+
+  var labels = { active: 'Total · Active', inactive: 'Total · Inactive', all: 'Total · All' };
+  function $id(id) { return document.getElementById(id); }
+  $id('tf-label').textContent   = labels[filter] || 'Total';
+  $id('tf-bud').textContent     = moneyShort(bud);
+  $id('tf-spend').textContent   = moneyShort(spend);
+  $id('tf-conn').textContent    = countFmt(conn);
+  $id('tf-costconn').textContent= conn ? moneyShort(spend / conn) : '—';
+  $id('tf-deals').textContent   = countFmt(deals);
+  $id('tf-costdeal').textContent= deals ? moneyShort(spend / deals) : '—';
+  $id('tf-inv').textContent     = moneyShort(inv);
+  $id('tf-roas').textContent    = '—';
+  $id('tf-newinv').textContent  = countFmt(newInv);
+  $id('tf-costnewinv').textContent = newInv ? moneyShort(spend / newInv) : '—';
+  $id('tf-calls').textContent   = countFmt(calls);
+  $id('tf-be').textContent      = pctFmt(be);
+  $id('tf-bn').textContent      = pctFmt(bn);
+}
+
+function setDelivery(btn) {
   var f = btn.getAttribute('data-f');
-  document.querySelectorAll('.tgl').forEach(function(b){ b.classList.toggle('tgl-on', b === btn); });
-  document.querySelectorAll('tbody tr[data-delivery]').forEach(function(row){
+  document.querySelectorAll('.tgl').forEach(function(b) { b.classList.toggle('tgl-on', b === btn); });
+  document.querySelectorAll('tbody tr[data-delivery]').forEach(function(row) {
     row.style.display = (f === 'all' || row.getAttribute('data-delivery') === f) ? '' : 'none';
   });
-  ['active','inactive','all'].forEach(function(k){
-    var tf = document.getElementById('tf-' + k);
-    if (tf) tf.style.display = (k === f) ? '' : 'none';
-  });
+  recomputeTfoot(f);
 }
 </script>
 
 <script>
-(function(){
-  var $ = function(id){ return document.getElementById(id); };
-  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+(function() {
+  var $ = function(id) { return document.getElementById(id); };
+  function escH(s) {
+    return String(s).replace(/[&<>"]/g, function(c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c];
+    });
+  }
 
   /* TABS */
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.ptab'));
-  function selectTab(tab){
-    tabs.forEach(function(t){
-      var on = (t === tab);
-      t.setAttribute('aria-selected', on ? 'true' : 'false');
-      $(t.getAttribute('aria-controls')).hidden = !on;
+  function selectTab(t) {
+    tabs.forEach(function(tab) {
+      var on = tab === t;
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      $(tab.getAttribute('aria-controls')).hidden = !on;
     });
   }
-  tabs.forEach(function(t, i){
-    t.addEventListener('click', function(){ selectTab(t); });
-    t.addEventListener('keydown', function(e){
-      if (e.key === 'ArrowRight'){ var n = tabs[(i+1) % tabs.length]; selectTab(n); n.focus(); }
-      if (e.key === 'ArrowLeft') { var p = tabs[(i-1+tabs.length) % tabs.length]; selectTab(p); p.focus(); }
+  tabs.forEach(function(t, i) {
+    t.addEventListener('click', function() { selectTab(t); });
+    t.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight') { var n = tabs[(i+1) % tabs.length]; selectTab(n); n.focus(); }
+      if (e.key === 'ArrowLeft')  { var p = tabs[(i-1+tabs.length) % tabs.length]; selectTab(p); p.focus(); }
     });
   });
 
   /* ACTION ITEMS */
-  var NOTES = [{"id":"n1","tag":"OPS","text":"Bad number rate at 5.4%, review lead form and enrichment"},{"id":"n2","tag":"OPS","text":"RingCentral number assignment — confirm SMS sequences are running"},{"id":"n3","tag":"CREATIVE","text":"Review active ad set connect rates and pause lowest performers"},{"id":"n4","tag":"IR","text":"Confirm all new investor leads are entered in Agora"},{"id":"n5","tag":"COMPLIANCE","text":"Confirm track record year across all campaign materials"}];
+  var NOTES = [{"id":"n1","tag":"OPS","text":"Bad + wrong number rate at 28.1% — review lead form and number enrichment"},{"id":"n2","tag":"OPS","text":"RingCentral number assignment — confirm SMS sequences are running"},{"id":"n3","tag":"CREATIVE","text":"Review active ad set connect rates and pause lowest performers"},{"id":"n4","tag":"IR","text":"Confirm all new investor leads are entered in Agora"},{"id":"n5","tag":"COMPLIANCE","text":"Confirm track record year across all campaign materials"}];
 
   var MEM = {};
-  function storeGet(k){ try { var v = window.localStorage.getItem(k); return v===null ? MEM[k] : v; } catch(e){ return MEM[k]; } }
-  function storeSet(k,v){ MEM[k]=v; try { window.localStorage.setItem(k,v); } catch(e){} }
+  function storeGet(k) { try { var v = window.localStorage.getItem(k); return v === null ? MEM[k] : v; } catch(e) { return MEM[k]; } }
+  function storeSet(k, v) { MEM[k] = v; try { window.localStorage.setItem(k, v); } catch(e) {} }
   var NOTE_KEY = 'fs_ir_notes_v1';
-  function loadState(){ try { return JSON.parse(storeGet(NOTE_KEY)||'{}') || {}; } catch(e){ return {}; } }
-  function saveState(s){ storeSet(NOTE_KEY, JSON.stringify(s)); }
+  function loadState() { try { return JSON.parse(storeGet(NOTE_KEY) || '{}') || {}; } catch(e) { return {}; } }
+  function saveState(s) { storeSet(NOTE_KEY, JSON.stringify(s)); }
 
-  function renderNotes(){
+  function renderNotes() {
     var s = loadState();
     var done = s.done || {};
     var list = NOTES.concat(s.custom || []);
-    var html = '';
-    list.forEach(function(n){
-      var isDone = !!done[n.id];
-      html += '<div class="note' + (isDone ? ' done' : '') + '">' +
-        '<input type="checkbox" data-note="' + esc(n.id) + '"' + (isDone?' checked':'') + ' aria-label="Mark complete">' +
-        '<span class="note-tag">' + esc(n.tag) + '</span>' +
-        '<span class="note-text">' + esc(n.text) + '</span>' +
-        (n.custom ? '<button class="note-drop" data-drop="' + esc(n.id) + '" aria-label="Remove">✕</button>' : '') +
+    var h = '';
+    list.forEach(function(n) {
+      var d = !!done[n.id];
+      h += '<div class="note' + (d ? ' done' : '') + '">' +
+        '<input type="checkbox" data-note="' + escH(n.id) + '"' + (d ? ' checked' : '') + ' aria-label="Mark complete">' +
+        '<span class="note-tag">' + escH(n.tag) + '</span>' +
+        '<span class="note-text">' + escH(n.text) + '</span>' +
+        (n.custom ? '<button class="note-drop" data-drop="' + escH(n.id) + '" aria-label="Remove">✕</button>' : '') +
         '</div>';
     });
-    if (!list.length) html = '<div class="note"><span class="note-text">No items.</span></div>';
-    $('noteList').innerHTML = html;
+    if (!list.length) h = '<div class="note"><span class="note-text">No items.</span></div>';
+    $('noteList').innerHTML = h;
   }
-  function addNote(){
+  function addNote() {
     var text = $('noteInput').value.trim();
     if (!text) return;
     var s = loadState();
     s.custom = s.custom || [];
-    s.custom.push({ id:'c'+Date.now(), tag:$('noteTag').value, text:text, custom:true });
+    s.custom.push({ id: 'c' + Date.now(), tag: $('noteTag').value, text: text, custom: true });
     saveState(s);
     $('noteInput').value = '';
     renderNotes();
   }
   $('noteAdd').addEventListener('click', addNote);
-  $('noteInput').addEventListener('keydown', function(e){ if (e.key==='Enter') addNote(); });
-  $('noteList').addEventListener('change', function(e){
+  $('noteInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') addNote(); });
+  $('noteList').addEventListener('change', function(e) {
     var id = e.target.getAttribute && e.target.getAttribute('data-note');
     if (!id) return;
     var s = loadState(); s.done = s.done || {};
-    if (e.target.checked) s.done[id]=1; else delete s.done[id];
+    if (e.target.checked) s.done[id] = 1; else delete s.done[id];
     saveState(s); renderNotes();
   });
-  $('noteList').addEventListener('click', function(e){
+  $('noteList').addEventListener('click', function(e) {
     var id = e.target.getAttribute && e.target.getAttribute('data-drop');
     if (!id) return;
     var s = loadState();
-    s.custom = (s.custom||[]).filter(function(n){ return n.id!==id; });
+    s.custom = (s.custom || []).filter(function(n) { return n.id !== id; });
     if (s.done) delete s.done[id];
     saveState(s); renderNotes();
   });
 
   /* CALCULATOR */
   var DAYS_IN_MONTH = 30.4;
-  var DEFAULTS = { leads:14, cpa:35, setter:30, mitch:50, conv:30, avgInv:75000 };
+  var DEFAULTS = { leads: 14, cpa: 35, setter: 30, mitch: 50, conv: 30, avgInv: 75000 };
   var IDS = Object.keys(DEFAULTS);
-  function num(id){ var v=parseFloat($(id).value); return isFinite(v)?v:0; }
-  function money(n){ return isFinite(n)?'$'+Math.round(n).toLocaleString('en-US'):'—'; }
-  function moneyShort(n){
-    if (!isFinite(n)||n===0) return '$0';
-    if (Math.abs(n)>=1e6) return '$'+(n/1e6).toFixed(2)+'M';
-    if (Math.abs(n)>=1e3) return '$'+(n/1e3).toFixed(1)+'K';
-    return '$'+n.toFixed(0);
+  function num(id) { var v = parseFloat($(id).value); return isFinite(v) ? v : 0; }
+  function money(n) { return isFinite(n) ? '$' + Math.round(n).toLocaleString('en-US') : '—'; }
+  function moneyS(n) {
+    if (!isFinite(n) || !n) return n === 0 ? '$0' : '—';
+    if (Math.abs(n) >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+    if (Math.abs(n) >= 1e3) return '$' + (n/1e3).toFixed(1) + 'K';
+    return '$' + n.toFixed(0);
   }
-  function count(n){ return isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1}):'—'; }
-  function recalc(){
-    var leads=num('leads'), cpa=num('cpa'), setter=num('setter')/100,
-        mitch=num('mitch')/100, conv=num('conv')/100, avgInv=num('avgInv');
-    var mo=leads*DAYS_IN_MONTH, sc=mo*setter, mc=sc*mitch, inv=mc*conv;
-    var mb=cpa*mo, db=mb/DAYS_IN_MONTH, cap=inv*avgInv, coc=cap?(mb/cap)*100:NaN;
-    $('oMonthlyLeads').textContent=count(mo);
-    $('oSetterConn').textContent=count(sc);
-    $('oMitchConn').textContent=count(mc);
-    $('oInvestors').textContent=count(inv);
-    $('oDailyBudget').textContent=money(db);
-    $('oMonthlyBudget').textContent=money(mb);
-    $('oNewCapital').textContent=moneyShort(cap);
-    $('oCoC').textContent=isFinite(coc)?coc.toFixed(2)+'%':'—';
+  function countStr(n) { return isFinite(n) ? n.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '—'; }
+  function recalc() {
+    var leads = num('leads'), cpa = num('cpa'),
+        setter = num('setter') / 100, mitch = num('mitch') / 100,
+        conv   = num('conv')   / 100, avgInv = num('avgInv');
+    var mo = leads * DAYS_IN_MONTH;
+    var sc = mo * setter;
+    var mc = sc * mitch;
+    var inv = mc * conv;
+    var mb = cpa * mo;
+    var db = mb / DAYS_IN_MONTH;
+    var cap = inv * avgInv;
+    var coc = cap ? (mb / cap) * 100 : NaN;
+    $('oMonthlyLeads').textContent  = countStr(mo);
+    $('oSetterConn').textContent    = countStr(sc);
+    $('oMitchConn').textContent     = countStr(mc);
+    $('oInvestors').textContent     = countStr(inv);
+    $('oDailyBudget').textContent   = money(db);
+    $('oMonthlyBudget').textContent = money(mb);
+    $('oNewCapital').textContent    = moneyS(cap);
+    $('oCoC').textContent           = isFinite(coc) ? coc.toFixed(2) + '%' : '—';
   }
-  IDS.forEach(function(id){ $(id).addEventListener('input', recalc); });
-  $('calcReset').addEventListener('click', function(){
-    IDS.forEach(function(id){ $(id).value=DEFAULTS[id]; });
+  IDS.forEach(function(id) { $(id).addEventListener('input', recalc); });
+  $('calcReset').addEventListener('click', function() {
+    IDS.forEach(function(id) { $(id).value = DEFAULTS[id]; });
     recalc();
   });
 
   /* MODAL */
-  var modal=$('modelModal'), opener=$('modelOpen'), lastFocus=null;
-  function openModal(){ lastFocus=document.activeElement; modal.hidden=false; document.body.classList.add('modal-open'); recalc(); $('leads').focus(); }
-  function closeModal(){ modal.hidden=true; document.body.classList.remove('modal-open'); if (lastFocus&&lastFocus.focus) lastFocus.focus(); }
+  var modal = $('modelModal'), opener = $('modelOpen'), lastFocus = null;
+  function openModal()  { lastFocus = document.activeElement; modal.hidden = false; document.body.classList.add('modal-open'); recalc(); $('leads').focus(); }
+  function closeModal() { modal.hidden = true; document.body.classList.remove('modal-open'); if (lastFocus && lastFocus.focus) lastFocus.focus(); }
   opener.addEventListener('click', openModal);
-  modal.addEventListener('click', function(e){ if (e.target.hasAttribute&&e.target.hasAttribute('data-close')) closeModal(); });
-  document.addEventListener('keydown', function(e){ if (e.key==='Escape'&&!modal.hidden) closeModal(); });
+  modal.addEventListener('click', function(e) { if (e.target.hasAttribute && e.target.hasAttribute('data-close')) closeModal(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
 
   recalc();
   renderNotes();
+  recomputeTfoot('active');  // initialise tfoot on load
 })();
 </script>
 
