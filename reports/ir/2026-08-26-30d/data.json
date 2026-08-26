@@ -3,7 +3,7 @@
   "attributionModel": "Linear Paid",
   "attributionWindow": "LTV",
   "view": "Meta / Ad Set",
-  "scrapeTime": "2026-08-26T14:31:07.063Z",
+  "scrapeTime": "2026-08-26T14:33:42.915Z",
   "adSets": {
     "headers": {
       "name": "Name",
@@ -193,7 +193,7 @@
           "cost_per_custom_event_7": "$529.94",
           "custom_event_8": "-",
           "custom_event_20": "-",
-          "custom_event_24": "115",
+          "custom_event_24": "116",
           "custom_event_25": "-",
           "cost_per_custom_event_25": "-",
           "custom_event_25_amount": "-",
