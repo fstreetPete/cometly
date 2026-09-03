@@ -1,0 +1,68 @@
+{
+  "date": "2026-09-03",
+  "source": "HubSpot Email - PNG Dashboard Export",
+  "email_id": "1a067929e49ed45f",
+  "yesterday": {
+    "calls": 93,
+    "connected": 8,
+    "left_voicemail": 37,
+    "no_answer": 45,
+    "bad_number": 3,
+    "connect_rate_pct": 8.6
+  },
+  "last_7_days": {
+    "calls": 423,
+    "connected": 30,
+    "left_voicemail": 241,
+    "no_answer": 124,
+    "bad_number": 3,
+    "busy": 2,
+    "called_no_vm": 1,
+    "wrong_number": 4,
+    "no_value": 18,
+    "connect_rate_pct": 7.1,
+    "calls_per_day": 60.4
+  },
+  "last_14_days": {
+    "calls": 926,
+    "connected": 72,
+    "left_voicemail": 537,
+    "no_answer": 253,
+    "bad_number": 5,
+    "busy": 2,
+    "called_no_vm": 1,
+    "wrong_number": 5,
+    "no_value": 51,
+    "connect_rate_pct": 7.8,
+    "calls_per_day": 66.1
+  },
+  "last_30_days": {
+    "calls": 2388,
+    "connected": 141,
+    "left_voicemail": 1026,
+    "no_answer": 802,
+    "bad_number": 20,
+    "busy": 10,
+    "called_no_vm": 1,
+    "wrong_number": 14,
+    "no_value": 374,
+    "connect_rate_pct": 5.9,
+    "calls_per_day": 79.6,
+    "bad_number_rate_pct": 0.84
+  },
+  "calls": 2388,
+  "connected": 141,
+  "dispositions": {
+    "left_voicemail": 1026,
+    "no_answer": 802,
+    "bad_number": 20,
+    "busy": 10,
+    "called_no_vm": 1,
+    "wrong_number": 14,
+    "no_value": 374
+  },
+  "reached_setter": null,
+  "booked": null,
+  "passed_to_mitch": null,
+  "reps": ["Abdella Mohammed", "Danni Ahmed"]
+}
