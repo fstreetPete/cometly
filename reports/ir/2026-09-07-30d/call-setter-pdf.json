@@ -1,21 +1,33 @@
 {
-  "calls": 11519,
-  "connected": 2071,
+  "calls": 2116,
+  "connected": 122,
   "dispositions": {
-    "Connected": 2071,
-    "Left Voicemail": 2480,
-    "No Answer": 1599,
-    "Bad Number": 95,
-    "Wrong Number": 43,
-    "Busy": 120,
-    "Called No VM": 1275,
-    "Left Live Message": 28,
-    "No Value": 3808
+    "bad_number": 16,
+    "busy": 5,
+    "called_no_vm": 9,
+    "connected": 122,
+    "left_voicemail": 848,
+    "no_answer": 744,
+    "wrong_number": 8,
+    "no_value": 364
   },
-  "reached_setter": 151,
-  "booked": 5,
-  "passed_to_mitch": 21,
-  "source": "HubSpot API (PDF signed-URL inaccessible without files scope; data pulled directly from CRM API \u2014 calls search + deal stages)",
+  "last_7_calls": 444,
+  "last_7_dispositions": {
+    "bad_number": 9,
+    "called_no_vm": 8,
+    "connected": 26,
+    "left_voicemail": 215,
+    "no_answer": 165,
+    "wrong_number": 2,
+    "no_value": 19
+  },
+  "last_14_calls": 879,
+  "yesterday_calls": 0,
+  "reached_setter": null,
+  "booked": null,
+  "passed_to_mitch": null,
+  "source": "HubSpot Email Dashboard Export (PNG images)",
   "date": "2026-09-07",
-  "note": "PDF download URL in email required HubSpot files scope (unavailable on current token). All metrics sourced from HubSpot CRM API: calls/search endpoint (11,519 records, 3 time windows to bypass 10k limit) and deals/search for pipeline stage counts."
+  "reps": ["Abdella Mohammed", "Danni Ahmed"],
+  "notes": "Pipeline stage data (reached_setter, booked, passed_to_mitch) not available in this email format; dashboard images contain call volume and disposition data only."
 }
