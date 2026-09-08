@@ -1,34 +1,31 @@
 {
-  "calls": 2116,
-  "calls_last_30": 2116,
-  "calls_last_14": 879,
-  "calls_last_7": 444,
-  "calls_yesterday": 0,
+  "calls": 2117,
   "connected": 122,
+  "calls_last_7": 326,
+  "connected_last_7": 19,
+  "calls_yesterday": 1,
   "dispositions": {
+    "left_voicemail": 848,
+    "no_answer": 744,
     "bad_number": 16,
     "busy": 5,
     "called_no_vm": 9,
-    "connected": 122,
-    "left_voicemail": 848,
-    "no_answer": 744,
     "wrong_number": 8,
-    "no_value": 364
+    "no_value": 365
   },
   "dispositions_last_7": {
+    "left_voicemail": 128,
+    "no_answer": 147,
     "bad_number": 9,
     "called_no_vm": 8,
-    "connected": 26,
-    "left_voicemail": 215,
-    "no_answer": 165,
-    "wrong_number": 2,
-    "no_value": 19
+    "connected": 19,
+    "no_value": 15
   },
-  "reps": ["Abdella Mohammed", "Danni Ahmed"],
+  "calls_per_day": 70.6,
   "reached_setter": null,
   "booked": null,
   "passed_to_mitch": null,
-  "source": "HubSpot PDF (PNG export)",
+  "source": "HubSpot PDF (dashboard screenshots)",
   "date": "2026-09-08",
-  "notes": "Yesterday (Sep 7) = Labor Day, 0 calls. Pipeline funnel stages (reached_setter/booked/passed_to_mitch) not present in this dashboard export."
+  "notes": "Pipeline breakdown (booked/setter/passed_to_mitch) not present in dashboard screenshot exports. Last 30 day window. Connected rate: 5.8% (122/2117)."
 }
